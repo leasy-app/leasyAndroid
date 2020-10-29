@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Leasy</string>
+    <string name="home">Home</string>
+    <string name="write">Write</string>
+    <string name="profile">Profile</string>
+    <string name="categories">Categories</string>
 </resources>

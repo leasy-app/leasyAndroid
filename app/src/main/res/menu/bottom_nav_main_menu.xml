@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home_bottom_nav_main"
+        android:enabled="true"
+        android:icon="@drawable/ic_home"
+        android:iconTint="?attr/colorOnSecondary"
+        android:title="@string/home" />
+    <item
+        android:id="@+id/write_bottom_nav_main"
+        android:enabled="true"
+        android:icon="@drawable/ic_edit"
+        android:iconTint="?attr/colorOnSecondary"
+        android:title="@string/write" />
+    <item
+        android:id="@+id/categories_bottom_nav_main"
+        android:enabled="true"
+        android:iconTint="?attr/colorOnSecondary"
+        android:icon="@drawable/ic_categories"
+        android:title="@string/categories" />
+    <item
+        android:id="@+id/profile_bottom_nav_main"
+        android:enabled="true"
+        android:iconTint="?attr/colorOnSecondary"
+        android:icon="@drawable/profile"
+        android:title="@string/profile" />
+</menu>
