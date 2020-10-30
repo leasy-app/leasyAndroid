@@ -29,12 +29,15 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
     }
 
     enum EnumDir {rightToLeft, leftToRight};
+    enum EnumPages {home, write, categories, profile}
+    EnumPages activePage;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.main_fragment, container, false);
         initialize(v);
+        loadHomePage(false);
         bottomNav.setOnNavigationItemSelectedListener(this);
         return v;
     }
@@ -45,15 +48,15 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
             return true;
         }
 
-        if (item.getItemId() == R.id.home_bottom_nav_main){
-            loadHomePage();
-        } else if (item.getItemId() == R.id.write_bottom_nav_main){
-            loadWritePage();
-        } else if (item.getItemId() == R.id.categories_bottom_nav_main){
-            loadCategoriesPage();
-        } else if (item.getItemId() == R.id.profile_bottom_nav_main){
-            loadProfilePage();
-        }
+//        if (item.getItemId() == R.id.home_bottom_nav_main){
+//            loadHomePage();
+//        } else if (item.getItemId() == R.id.write_bottom_nav_main){
+//            loadWritePage();
+//        } else if (item.getItemId() == R.id.categories_bottom_nav_main){
+//            loadCategoriesPage();
+//        } else if (item.getItemId() == R.id.profile_bottom_nav_main){
+//            loadProfilePage();
+//        }
 
         return true;
     }
@@ -74,8 +77,9 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
         fragmentTransaction.commitNow();
     }
 
-    private void loadHomePage(){
-        // TODO: 10/30/20
+    private void loadHomePage(boolean addToBackStack){
+        changeMainFragment(new HomeFragment(), null, addToBackStack);
+        activePage = EnumPages.home;
     }
 
     private void loadCategoriesPage(){
