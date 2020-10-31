@@ -13,4 +13,8 @@
     <color name="yellow_palette">#FFF689</color>
     <color name="pink_palette">#F75590</color>
     <color name="blue_palette">#6FBAFB</color>
+
+    <color name="text_color_black">#191F24</color>
+    <color name="text_color_grey">#757474</color>
+    <color name="text_color_white">#F2F2F2</color>
 </resources>

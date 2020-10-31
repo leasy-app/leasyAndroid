@@ -3,16 +3,19 @@
     <style name="Theme.Leasy" parent="AppBaseTheme">
         <item name="windowNoTitle">true</item>
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/black_palette</item>
+        <item name="colorPrimary">@color/blue_palette</item>
         <item name="colorPrimaryVariant">@color/white_palette</item>
         <item name="colorOnPrimary">@color/blue_palette</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/black_palette</item>
         <item name="colorSecondaryVariant">@color/white_palette</item>
         <item name="colorOnSecondary">@color/blue_palette</item>
+        <item name="colorAccent">@color/blue_palette</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:textColorPrimary">@color/text_color_black</item>
+        <item name="android:textColorSecondary">@color/text_color_grey</item>
     </style>
 
     <style name="Theme.Leasy.NoActionBar">
@@ -23,4 +26,5 @@
     <style name="Theme.Leasy.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Leasy.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

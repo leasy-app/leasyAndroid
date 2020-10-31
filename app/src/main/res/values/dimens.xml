@@ -5,6 +5,7 @@
     <dimen name="text_size_heading_3">14sp</dimen>
     <dimen name="text_size_subtitle_1">10sp</dimen>
     <dimen name="text_size_subtitle_2">8sp</dimen>
+    <dimen name="text_size_body">15sp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 

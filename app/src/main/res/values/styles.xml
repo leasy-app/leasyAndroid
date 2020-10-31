@@ -4,4 +4,36 @@
         <item name="android:fontFamily">@font/google_sans_regular</item>
         <item name="fontFamily">@font/google_sans_regular</item>
     </style>
+    
+    <style name="AppTextAppearance" parent="TextAppearance.AppCompat.Large">
+        <item name="fontFamily">@font/google_sans_regular</item>
+        <item name="android:textSize">@dimen/text_size_body</item>
+    </style>
+    
+    <style name="AppTextAppearance.Heading1" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_size_heading_1</item>
+    </style>
+    
+    <style name="AppTextAppearance.Heading2" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_size_heading_2</item>
+    </style>
+    
+    <style name="AppTextAppearance.Heading3" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_size_heading_3</item>
+    </style>
+    
+    <style name="AppTextAppearance.subtitle1" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">@dimen/text_size_subtitle_1</item>
+    </style>
+
+    <style name="AppTextAppearance.subtitle2" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">@dimen/text_size_subtitle_2</item>
+    </style>
+
+    <style name="AppTextAppearance.subtitle2.Large" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textSize">@dimen/text_size_subtitle_2</item>
+    </style>
 </resources>
