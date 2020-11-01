@@ -3,12 +3,17 @@ package com.leasy.leasyAndroid.ui.main;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.leasy.leasyAndroid.R;
+import com.leasy.leasyAndroid.RecyclerAdapterReadPost;
+import com.leasy.leasyAndroid.model.ReadPostItem;
+
+import java.util.LinkedList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +21,9 @@ import com.leasy.leasyAndroid.R;
  * create an instance of this fragment.
  */
 public class ReadPostFragment extends Fragment {
+
+    private RecyclerView recyclerPost;
+    private RecyclerAdapterReadPost adapterReadPost;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,7 +68,22 @@ public class ReadPostFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_read_post, container, false);
+        View v = inflater.inflate(R.layout.fragment_read_post, container, false);
+        initialize(v);
+
+        // FIXME: 11/2/20 Show read content
+        LinkedList<ReadPostItem> readPostItems = new LinkedList<>();
+        readPostItems.add(new ReadPostItem.ReadPostItemText(0, getString(R.string.large_text)));
+        readPostItems.add(new ReadPostItem.ReadPostItemImage(1, "https://www.talkwalker.com/images/2020/blog-headers/image-analysis.png"));
+        adapterReadPost = new RecyclerAdapterReadPost(readPostItems, getContext());
+        recyclerPost.setHasFixedSize(true);
+        recyclerPost.setAdapter(adapterReadPost);
+
+
+        return v;
+    }
+
+    private void initialize(View v) {
+        recyclerPost = v.findViewById(R.id.recycler_read_post_recycler);
     }
 }
