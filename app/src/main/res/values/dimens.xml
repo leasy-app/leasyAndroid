@@ -1,11 +1,11 @@
 <resources>
     <dimen name="text_margin">16dp</dimen>
-    <dimen name="text_size_heading_1">18sp</dimen>
-    <dimen name="text_size_heading_2">16sp</dimen>
-    <dimen name="text_size_heading_3">14sp</dimen>
-    <dimen name="text_size_subtitle_1">10sp</dimen>
-    <dimen name="text_size_subtitle_2">8sp</dimen>
-    <dimen name="text_size_body">15sp</dimen>
+    <dimen name="text_size_heading_1">19sp</dimen>
+    <dimen name="text_size_heading_2">17sp</dimen>
+    <dimen name="text_size_heading_3">15sp</dimen>
+    <dimen name="text_size_subtitle_1">11sp</dimen>
+    <dimen name="text_size_subtitle_2">10sp</dimen>
+    <dimen name="text_size_body">14sp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
