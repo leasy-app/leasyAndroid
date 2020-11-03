@@ -1,20 +1,16 @@
 package com.leasy.leasyAndroid.ui.main;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelStoreOwner;
-
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.leasy.leasyAndroid.R;
@@ -28,8 +24,10 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
         return new MainFragment();
     }
 
-    enum EnumDir {rightToLeft, leftToRight};
+    enum EnumDir {rightToLeft, leftToRight}
+
     enum EnumPages {home, write, categories, profile}
+
     EnumPages activePage;
 
     @Nullable
@@ -37,7 +35,7 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.main_fragment, container, false);
         initialize(v);
-        loadHomePage(false);
+        loadHomePage(true);
         bottomNav.setOnNavigationItemSelectedListener(this);
         return v;
     }
@@ -47,50 +45,49 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
         if (item.getItemId() == bottomNav.getSelectedItemId()) {
             return true;
         }
-
-//        if (item.getItemId() == R.id.home_bottom_nav_main){
-//            loadHomePage();
-//        } else if (item.getItemId() == R.id.write_bottom_nav_main){
-//            loadWritePage();
-//        } else if (item.getItemId() == R.id.categories_bottom_nav_main){
-//            loadCategoriesPage();
-//        } else if (item.getItemId() == R.id.profile_bottom_nav_main){
-//            loadProfilePage();
-//        }
+        if (item.getItemId() == R.id.home_bottom_nav_main) {
+            loadHomePage(false);
+        } else if (item.getItemId() == R.id.write_bottom_nav_main) {
+            loadWritePage();
+        } else if (item.getItemId() == R.id.categories_bottom_nav_main) {
+            loadCategoriesPage();
+        } else if (item.getItemId() == R.id.profile_bottom_nav_main) {
+            loadProfilePage();
+        }
 
         return true;
     }
 
-    private void changeMainFragment(Fragment newFragment, @Nullable EnumDir transitionDir, boolean addToBackStack){
+    private void changeMainFragment(Fragment newFragment, @Nullable EnumDir transitionDir, boolean addToBackStack) {
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-        if (transitionDir == EnumDir.rightToLeft){
-            fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right,
+        if (transitionDir == EnumDir.rightToLeft) {
+            fragmentTransaction = fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right,
                     R.anim.slide_in_right, R.anim.slide_out_left);
-        } else if (transitionDir == EnumDir.leftToRight){
-            fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
+        } else if (transitionDir == EnumDir.leftToRight) {
+            fragmentTransaction = fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
                     android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         }
-        if (addToBackStack){
-            fragmentTransaction.addToBackStack(null);
-        }
-        fragmentTransaction.replace(R.id.container_main_fragment, newFragment);
-        fragmentTransaction.commitNow();
+        fragmentTransaction = fragmentTransaction.replace(R.id.container_main_fragment, newFragment);
+//        if (addToBackStack) {
+//            fragmentTransaction = fragmentTransaction.addToBackStack(null);
+//        }
+        fragmentTransaction.commit();
     }
 
-    private void loadHomePage(boolean addToBackStack){
+    private void loadHomePage(boolean addToBackStack) {
         changeMainFragment(new HomeFragment(), null, addToBackStack);
         activePage = EnumPages.home;
     }
 
-    private void loadCategoriesPage(){
+    private void loadCategoriesPage() {
+        changeMainFragment(new CategoriesListFragment(), null, true);
+    }
+
+    private void loadProfilePage() {
         // TODO: 10/30/20
     }
 
-    private void loadProfilePage(){
-        // TODO: 10/30/20
-    }
-
-    private void loadWritePage(){
+    private void loadWritePage() {
         // TODO: 10/30/20
     }
 
