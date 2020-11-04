@@ -19,6 +19,7 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
 
     private MainViewModel mainViewModel;
     private BottomNavigationView bottomNav;
+    private WritePostFragment writePostFragment;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -88,7 +89,9 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
     }
 
     private void loadWritePage() {
-        // TODO: 10/30/20
+        if (writePostFragment==null)
+            writePostFragment = new WritePostFragment();
+        changeMainFragment(writePostFragment, null, false);
     }
 
     @Override

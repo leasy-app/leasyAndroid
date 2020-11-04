@@ -2,6 +2,7 @@ package com.leasy.leasyAndroid.ui.main;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +16,11 @@ import android.widget.ImageView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.leasy.leasyAndroid.R;
+import com.leasy.leasyAndroid.WritePostRecyclerAdapter;
+import com.leasy.leasyAndroid.model.WritePostItem;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class WritePostFragment extends Fragment {
 
@@ -24,10 +30,32 @@ public class WritePostFragment extends Fragment {
     private TextInputEditText edtTitle, edtDescription;
     private ImageButton btnAddText, btnAddHeading, btnAddImage, btnAddCode;
 
+    private WritePostRecyclerAdapter writePostRecyclerAdapter;
+
+    private LinkedList<WritePostItem> writePostItemLinkedList;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (writePostItemLinkedList == null) {
+            writePostItemLinkedList = new LinkedList<>();
+        }
+        writePostRecyclerAdapter = new WritePostRecyclerAdapter(writePostItemLinkedList, getContext());
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_write_post, container, false);
         initialize(v);
+
+
+        recyclerWrite.setHasFixedSize(false);
+        recyclerWrite.setAdapter(writePostRecyclerAdapter);
+
+        btnAddText.setOnClickListener(v1 -> {
+            writePostItemLinkedList.add(new WritePostItem.WritePostItemAddText());
+            writePostRecyclerAdapter.notifyDataSetChanged();
+        });
 
         return v;
     }

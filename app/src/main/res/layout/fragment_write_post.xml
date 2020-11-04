@@ -19,7 +19,9 @@
         android:textAppearance="@style/AppTextAppearance.Heading3"
         android:textColor="@color/text_color_white" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
+        android:paddingBottom="30dp"
+        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never">
@@ -29,25 +31,29 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include layout="@layout/write_post_cover_and_title" />
+            <include layout="@layout/write_post_cover_and_title"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"/>
 
             <androidx.recyclerview.widget.RecyclerView
+                android:nestedScrollingEnabled="true"
                 android:id="@+id/recycler_write_post"
+                tools:listitem="@layout/write_post_add_text_recycler_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 android:overScrollMode="never"
-                android:paddingStart="20dp"
                 android:paddingTop="5dp"
-                android:paddingEnd="20dp"
                 android:paddingBottom="5dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 
-            <include layout="@layout/write_post_toolbar_layout" />
+            <include layout="@layout/write_post_toolbar_layout"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"/>
         </LinearLayout>
 
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>
