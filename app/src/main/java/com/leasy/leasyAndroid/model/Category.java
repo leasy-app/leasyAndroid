@@ -1,8 +1,13 @@
 package com.leasy.leasyAndroid.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Category {
 
+    @SerializedName("Name")
     private String categoryName;
+
+    @SerializedName("Photo")
     private String imageUrl;
 
     public Category() {
