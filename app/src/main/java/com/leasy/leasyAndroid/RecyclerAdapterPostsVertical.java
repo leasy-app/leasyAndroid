@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.leasy.leasyAndroid.model.ListItems;
+import com.leasy.leasyAndroid.model.PostsListItem;
 
 import java.util.List;
 
@@ -21,16 +22,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class RecyclerAdapterPostsVertical extends RecyclerView.Adapter<RecyclerAdapterPostsVertical.PostsVerticalRecyclerViewHolder> {
 
     private View.OnClickListener onClickListener;
-    private List<ListItems> listItems;
+    private List<PostsListItem> postsListItems;
     private Context context;
 
     private static final int item_type_post = 101;
     private static final int item_type_section = 282;
     private static final String LOG_TAG = "log_posts_recycler";
 
-    public RecyclerAdapterPostsVertical(View.OnClickListener onClickListener, List<ListItems> listItems, Context context) {
+    public RecyclerAdapterPostsVertical(View.OnClickListener onClickListener, List<PostsListItem> postsListItems, Context context) {
         this.onClickListener = onClickListener;
-        this.listItems = listItems;
+        this.postsListItems = postsListItems;
         this.context = context;
     }
 
@@ -49,26 +50,28 @@ public class RecyclerAdapterPostsVertical extends RecyclerView.Adapter<RecyclerA
 
     @Override
     public void onBindViewHolder(@NonNull PostsVerticalRecyclerViewHolder holder, int position) {
-        Log.i(LOG_TAG, listItems.get(position).toString());
+        Log.i(LOG_TAG, postsListItems.get(position).toString());
         if (getItemViewType(position) == item_type_section) {
-            holder.txtSec.setText(listItems.get(position).getSectionTitle());
+            holder.txtSec.setText(postsListItems.get(position).getSectionTitle());
         } else {
-            ListItems.PostItem item = listItems.get(position).getPostItem();
+            PostsListItem.PostItem item = postsListItems.get(position).getPostItem();
             holder.txtCategory.setText(item.getCategory());
             holder.txtTitle.setText(item.getTitle());
             holder.txtSummary.setText(item.getSummary());
             holder.txtDate.setText(item.getDate());
             holder.txtAuthor.setText(item.getAuthor());
             if (item.getAuthorImageURL() != null)
-                Glide.with(context).load(item.getAuthorImageURL()).into(holder.imgAuthor);
+                if (URLUtil.isValidUrl(item.getAuthorImageURL()))
+                    Glide.with(context).load(item.getAuthorImageURL()).into(holder.imgAuthor);
             if (item.getPostImageURL() != null)
-                Glide.with(context).load(item.getPostImageURL()).into(holder.imgPost);
+                if (URLUtil.isValidUrl(item.getPostImageURL()))
+                    Glide.with(context).load(item.getPostImageURL()).into(holder.imgPost);
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (listItems.get(position).getSectionTitle() != null)
+        if (postsListItems.get(position).getSectionTitle() != null)
             return item_type_section;
         else
             return item_type_post;
@@ -76,7 +79,7 @@ public class RecyclerAdapterPostsVertical extends RecyclerView.Adapter<RecyclerA
 
     @Override
     public int getItemCount() {
-        return listItems.size();
+        return postsListItems.size();
     }
 
 
