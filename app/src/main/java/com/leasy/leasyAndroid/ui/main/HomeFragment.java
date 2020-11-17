@@ -8,12 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.leasy.leasyAndroid.MainActivity;
 import com.leasy.leasyAndroid.R;
 import com.leasy.leasyAndroid.RecyclerAdapterPostsVertical;
 import com.leasy.leasyAndroid.api.ApiUtils;
@@ -62,7 +64,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, UiCa
 
     @Override
     public void onClick(View v) {
-        // TODO: 10/31/20 open posts
+        int i = ((RecyclerView.ViewHolder) v.getTag()).getAdapterPosition();
+        ((MainActivity) getActivity()).showPost(postsListItemList.get(i));
     }
 
     private void initialize(View v) {
