@@ -80,4 +80,37 @@ public class ApiUtils {
         });
     }
 
+    public static void requestAddFullPost(
+            UiCallBack uiCallBack,
+            String title,
+            String photoUrl,
+            String category,
+            String writer,
+            String content1,
+            String content2,
+            String mainContent,
+            String summary
+    ) {
+        Call<Object> call = RetrofitClientInstance.getRetrofitInstance()
+                .create(Api.class).addFullPost(title, photoUrl, category,
+                        writer, content1, content2, mainContent, summary);
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if (response.isSuccessful()) {
+                    uiCallBack.onRequestSuccessful(response);
+                } else if (500 <= response.code() && response.code() <= 599) {
+                    uiCallBack.onInternalErrorFailure();
+                } else if (response.code() != 401) {
+                    uiCallBack.onRequestError(response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                uiCallBack.onRequestSendFailure(t);
+            }
+        });
+    }
+
 }

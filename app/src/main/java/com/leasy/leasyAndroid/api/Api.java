@@ -22,5 +22,15 @@ public interface Api {
     @GET("polls/Content/")
     Call<List<ReadPostItem>> getPostContent(@Query("post") String id);
 
-
+    @GET("polls/AddFullPost")
+    Call<Object> addFullPost(
+            @Query("name") String title,
+            @Query("photo") String photoUrl,
+            @Query("categorie") String category,
+            @Query("writer") String writer,
+            @Query("content1") String content1,
+            @Query("content2") String content2,
+            @Query("main_content") String mainContent,
+            @Query("summary") String summary
+    );
 }
