@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.leasy.leasyAndroid.model.PostsListItem;
 import com.leasy.leasyAndroid.ui.main.MainFragment;
 import com.leasy.leasyAndroid.ui.main.ReadPostFragment;
 
@@ -21,6 +22,16 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.container_main_activity, mainFragment)
                     .commitNow();
         }
+    }
+
+    public void showPost(PostsListItem postsListItem) {
+        ReadPostFragment readPostFragment = ReadPostFragment.newInstance(postsListItem);
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.fragment_open_enter, R.anim.fragment_open_exit,
+                        R.anim.fragment_close_enter, R.anim.fragment_close_exit)
+                .replace(R.id.container_main_activity, readPostFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

@@ -4,35 +4,46 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.leasy.leasyAndroid.CategoriesListRecyclerAdapter;
 import com.leasy.leasyAndroid.R;
+import com.leasy.leasyAndroid.api.ApiUtils;
+import com.leasy.leasyAndroid.api.UiCallBack;
 import com.leasy.leasyAndroid.model.Category;
 
-import java.util.LinkedList;
+import java.util.List;
 
-public class CategoriesListFragment extends Fragment implements View.OnClickListener {
+import retrofit2.Response;
+
+public class CategoriesListFragment extends Fragment implements View.OnClickListener, UiCallBack {
 
     private RecyclerView recyclerCategories;
     private CategoriesListRecyclerAdapter recyclerAdapter;
+    private List<Category> categoryList;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v =  inflater.inflate(R.layout.fragment_categories_list, container, false);
         initialize(v);
 
-        // FIXME: 11/2/20 Show real data
-        LinkedList<Category> categories = new LinkedList<>();
-        categories.add(new Category("Algorithms", null));
-        categories.add(new Category("Algorithms2", null));
-        categories.add(new Category("Algorithms3", null));
-        recyclerAdapter = new CategoriesListRecyclerAdapter(categories, this, getContext());
-        recyclerCategories.setHasFixedSize(true);
-        recyclerCategories.setAdapter(recyclerAdapter);
+        if (categoryList == null) {
+            swipeRefreshLayout.setRefreshing(true);
+            ApiUtils.requestGetAllCategories(this);
+        }
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            if (categoryList != null)
+                swipeRefreshLayout.setRefreshing(false);
+            ApiUtils.requestGetAllCategories(this);
+        });
 
         return v;
     }
@@ -44,5 +55,48 @@ public class CategoriesListFragment extends Fragment implements View.OnClickList
 
     private void initialize(View v) {
         recyclerCategories = v.findViewById(R.id.recycler_categories_list);
+        swipeRefreshLayout = v.findViewById(R.id.swipe_refresh_categories_layout);
+    }
+
+    @Override
+    public void onRequestSuccessful(Response response) {
+        categoryList = ((List<Category>) response.body());
+        recyclerAdapter = new CategoriesListRecyclerAdapter(categoryList, this, getContext());
+        recyclerCategories.setHasFixedSize(true);
+        recyclerCategories.setAdapter(recyclerAdapter);
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onRequestError(Response response) {
+        Toast.makeText(getContext(), "Error", Toast.LENGTH_LONG).show();
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onRequestSendFailure(Throwable t) {
+        Toast.makeText(getContext(), "send failure", Toast.LENGTH_LONG).show();
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onRefreshTokenExpired(Response response) {
+
+    }
+
+    @Override
+    public void onObtainAccessTokenError(Response response) {
+
+    }
+
+    @Override
+    public void onObtainAccessTokenFailure(Throwable t) {
+
+    }
+
+    @Override
+    public void onInternalErrorFailure() {
+        Toast.makeText(getContext(), "internal error", Toast.LENGTH_LONG).show();
+        swipeRefreshLayout.setRefreshing(false);
     }
 }
