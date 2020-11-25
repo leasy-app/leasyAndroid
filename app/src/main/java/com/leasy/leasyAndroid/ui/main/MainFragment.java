@@ -21,6 +21,7 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
     private BottomNavigationView bottomNav;
     private WritePostFragment writePostFragment;
 
+
     public static MainFragment newInstance() {
         return new MainFragment();
     }
@@ -29,21 +30,33 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
 
     enum EnumPages {home, write, categories, profile}
 
-    EnumPages activePage;
+    EnumPages activePage = EnumPages.home;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.main_fragment, container, false);
         initialize(v);
-        loadHomePage(true);
+        switch (activePage) {
+            case home:
+                loadHomePage(false);
+                break;
+            case write:
+                loadWritePage();
+                break;
+            case categories:
+                loadCategoriesPage();
+                break;
+            case profile:
+                loadProfilePage();
+                break;
+        }
         bottomNav.setOnNavigationItemSelectedListener(this);
         return v;
     }
 
     public void returnToHomeFromWrite() {
         loadHomePage(true);
-        bottomNav.setSelectedItemId(R.id.home_bottom_nav_main);
         writePostFragment = null;
     }
 
@@ -87,7 +100,8 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
     }
 
     private void loadCategoriesPage() {
-        changeMainFragment(new CategoriesListFragment(), null, true);
+        changeMainFragment(new CategoriesListFragment(), null, false);
+        activePage = EnumPages.categories;
     }
 
     private void loadProfilePage() {
@@ -95,9 +109,10 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
     }
 
     private void loadWritePage() {
-        if (writePostFragment==null)
+        if (writePostFragment == null)
             writePostFragment = new WritePostFragment();
         changeMainFragment(writePostFragment, null, false);
+        activePage = EnumPages.write;
     }
 
     @Override
