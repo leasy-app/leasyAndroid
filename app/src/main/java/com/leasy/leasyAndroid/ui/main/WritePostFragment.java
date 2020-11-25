@@ -1,28 +1,33 @@
 package com.leasy.leasyAndroid.ui.main;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-
 import com.google.android.material.textfield.TextInputEditText;
 import com.leasy.leasyAndroid.R;
 import com.leasy.leasyAndroid.WritePostRecyclerAdapter;
+import com.leasy.leasyAndroid.api.ApiUtils;
+import com.leasy.leasyAndroid.api.UiCallBack;
 import com.leasy.leasyAndroid.model.WritePostItem;
 
-import java.util.ArrayList;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.LinkedList;
 
-public class WritePostFragment extends Fragment {
+import retrofit2.Response;
+
+public class WritePostFragment extends Fragment implements UiCallBack {
 
     private RecyclerView recyclerWrite;
     private Button btnPublish;
@@ -57,6 +62,50 @@ public class WritePostFragment extends Fragment {
             writePostRecyclerAdapter.notifyDataSetChanged();
         });
 
+        btnPublish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title = edtTitle.getText().toString();
+                String photo = "NULL"; // FIXME: 11/20/20
+                String category = "api"; // FIXME: 11/20/20
+                String writer = "windows"; // FIXME: 11/20/20
+                String summary = edtDescription.getText().toString();
+
+                JSONObject jsonObject = new JSONObject();
+
+                for (int i = 0; i < writePostItemLinkedList.size(); i++) {
+                    WritePostItem postItem = writePostItemLinkedList.get(i);
+                    switch (postItem.getPostType()) {
+                        case text:
+                            try {
+                                jsonObject.put(
+                                        "TEXT_" + i,
+                                        ((WritePostItem.WritePostItemAddText) postItem).getText()
+                                );
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        default:
+                            // TODO: 11/20/20
+                            break;
+                    }
+                }
+
+                ApiUtils.requestAddFullPost(
+                        WritePostFragment.this,
+                        title,
+                        photo,
+                        category,
+                        writer,
+                        "null",
+                        "null",
+                        jsonObject.toString(),
+                        summary
+                );
+            }
+        });
+
         return v;
     }
 
@@ -70,5 +119,40 @@ public class WritePostFragment extends Fragment {
         btnAddHeading = v.findViewById(R.id.btn_write_post_add_heading);
         btnAddImage = v.findViewById(R.id.btn_write_post_add_image);
         btnAddCode = v.findViewById(R.id.btn_write_post_add_code);
+    }
+
+    @Override
+    public void onRequestSuccessful(Response response) {
+        // TODO: 11/20/20 go to home page
+    }
+
+    @Override
+    public void onRequestError(Response response) {
+        Toast.makeText(getContext(), "on request error :/", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRequestSendFailure(Throwable t) {
+        t.printStackTrace();
+    }
+
+    @Override
+    public void onRefreshTokenExpired(Response response) {
+        Toast.makeText(getContext(), "refresh token failure", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onObtainAccessTokenError(Response response) {
+        Toast.makeText(getContext(), "obtain access token error", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onObtainAccessTokenFailure(Throwable t) {
+        Toast.makeText(getContext(), "access token failure", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onInternalErrorFailure() {
+        Toast.makeText(getContext(), "Internal Error", Toast.LENGTH_SHORT).show();
     }
 }

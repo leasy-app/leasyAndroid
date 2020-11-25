@@ -1,5 +1,7 @@
 package com.leasy.leasyAndroid.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ReadPostItem {
 
     public static enum TypeEnum {
@@ -8,12 +10,51 @@ public class ReadPostItem {
 //        Youtube,
     }
 
-    private TypeEnum type;
+    @SerializedName("Id_id")
     private int id;
 
-     protected ReadPostItem(int id, TypeEnum type){
+    @SerializedName("Content1")
+    private String content1;
+
+    @SerializedName("Content2")
+    private String content2;
+
+    @SerializedName("Main_content")
+    private String mainContent;
+
+    private TypeEnum type;
+
+
+    protected ReadPostItem(int id, TypeEnum type){
         this.id = id;
         this.type = type;
+    }
+
+    public ReadPostItem() {
+    }
+
+    public String getContent1() {
+        return content1;
+    }
+
+    public void setContent1(String content1) {
+        this.content1 = content1;
+    }
+
+    public String getContent2() {
+        return content2;
+    }
+
+    public void setContent2(String content2) {
+        this.content2 = content2;
+    }
+
+    public String getMainContent() {
+        return mainContent;
+    }
+
+    public void setMainContent(String mainContent) {
+        this.mainContent = mainContent;
     }
 
     public TypeEnum getType() {

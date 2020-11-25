@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,7 +40,8 @@ public class CategoriesListRecyclerAdapter extends RecyclerView.Adapter<Categori
     public void onBindViewHolder(@NonNull CategoriesListViewHolder holder, int position) {
         Category category = categoryList.get(position);
         if (category.getImageUrl() != null) {
-            Glide.with(context).load(category.getImageUrl()).into(holder.imgCover);
+            if (URLUtil.isValidUrl(category.getImageUrl()))
+                Glide.with(context).load(category.getImageUrl()).into(holder.imgCover);
         }
         holder.txtName.setText(category.getCategoryName());
     }

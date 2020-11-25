@@ -1,8 +1,20 @@
 package com.leasy.leasyAndroid.model;
 
-public class ListItems {
+import com.google.gson.annotations.SerializedName;
+
+public class PostsListItem {
     private String sectionTitle;
+
+    @SerializedName("Posts")
     private PostItem postItem;
+
+    public PostsListItem(String sectionTitle) {
+        this.sectionTitle = sectionTitle;
+    }
+
+    public PostsListItem(PostItem postItem) {
+        this.postItem = postItem;
+    }
 
     @Override
     public String toString() {
@@ -29,13 +41,28 @@ public class ListItems {
     }
 
     public static class PostItem {
+
+        @SerializedName("Name")
         private String title;
+
+        @SerializedName("Summary")
         private String summary;
+
+        @SerializedName("Writer_id")
         private String author;
+
+        @SerializedName("Create_time")
         private String date;
+
+        @SerializedName("Header_photo")
         private String postImageURL;
+
         private String authorImageURL;
+
+        @SerializedName("categorie_id")
         private String category;
+
+        @SerializedName("Id")
         private String id;
 
         public PostItem() {

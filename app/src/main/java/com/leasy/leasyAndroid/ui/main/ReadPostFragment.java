@@ -8,61 +8,60 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.leasy.leasyAndroid.R;
 import com.leasy.leasyAndroid.RecyclerAdapterReadPost;
+import com.leasy.leasyAndroid.api.ApiUtils;
+import com.leasy.leasyAndroid.api.UiCallBack;
+import com.leasy.leasyAndroid.model.PostsListItem;
 import com.leasy.leasyAndroid.model.ReadPostItem;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.LinkedList;
+import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ReadPostFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ReadPostFragment extends Fragment {
+import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Response;
 
+public class ReadPostFragment extends Fragment implements UiCallBack {
+
+    private TextView txtTitle, txtAuthor, txtDate;
+    private CircleImageView imgAuthorPhoto;
+    private ImageView imgCoverImage;
     private RecyclerView recyclerPost;
+
     private RecyclerAdapterReadPost adapterReadPost;
+    private List<ReadPostItem> readPostItemList;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM_POST_ITEM = "param1";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public ReadPostFragment() {
-        // Required empty public constructor
-    }
+    private PostsListItem paramPostItem;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param paramPostItem Parameter 1.
      * @return A new instance of fragment ReadPostFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static ReadPostFragment newInstance(String param1, String param2) {
+    public static ReadPostFragment newInstance(PostsListItem paramPostItem) {
         ReadPostFragment fragment = new ReadPostFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+        fragment.setParamPostItem(paramPostItem);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
@@ -71,19 +70,109 @@ public class ReadPostFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_read_post, container, false);
         initialize(v);
 
+        txtTitle.setText(paramPostItem.getPostItem().getTitle());
+        txtDate.setText(paramPostItem.getPostItem().getDate());
+        txtAuthor.setText(paramPostItem.getPostItem().getAuthor());
+        String authorUrl = paramPostItem.getPostItem().getAuthorImageURL();
+        if (URLUtil.isValidUrl(authorUrl))
+            Glide.with(getContext()).load(authorUrl).into(imgAuthorPhoto);
+        String coverUrl = paramPostItem.getPostItem().getPostImageURL();
+        if (URLUtil.isValidUrl(coverUrl))
+            Glide.with(getContext()).load(coverUrl).into(imgCoverImage);
+
         // FIXME: 11/2/20 Show read content
-        LinkedList<ReadPostItem> readPostItems = new LinkedList<>();
-        readPostItems.add(new ReadPostItem.ReadPostItemText(0, getString(R.string.large_text)));
-        readPostItems.add(new ReadPostItem.ReadPostItemImage(1, "https://www.talkwalker.com/images/2020/blog-headers/image-analysis.png"));
-        adapterReadPost = new RecyclerAdapterReadPost(readPostItems, getContext());
-        recyclerPost.setHasFixedSize(true);
-        recyclerPost.setAdapter(adapterReadPost);
+        ApiUtils.requestGetPostContent(this, paramPostItem.getPostItem().getId());
+
 
 
         return v;
     }
 
+    private void setupList() {
+        adapterReadPost = new RecyclerAdapterReadPost(readPostItemList, getContext());
+        recyclerPost.setHasFixedSize(true);
+        recyclerPost.setAdapter(adapterReadPost);
+    }
+
+    @Override
+    public void onRequestSuccessful(Response response) {
+        ReadPostItem readPostItem = ((List<ReadPostItem>) response.body()).get(0);
+        String content = readPostItem.getMainContent();
+        readPostItemList = new LinkedList<>();
+        readPostItemList.add(new ReadPostItem.ReadPostItemText(0, paramPostItem.getPostItem().getSummary()));
+        JSONObject jsonObject;
+        try {
+             jsonObject = new JSONObject(content);
+        } catch (Exception e){
+            readPostItemList.add(new ReadPostItem.ReadPostItemText(1, content));
+            setupList();
+            return;
+        }
+        while(jsonObject.keys().hasNext()) {
+            String key = jsonObject.keys().next();
+            if (key.startsWith("TEXT")) {
+                try {
+                    ReadPostItem.ReadPostItemText itemText = new ReadPostItem.ReadPostItemText(1,
+                            jsonObject.getString(key));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else if (key.startsWith("IMAGE")) {
+                try {
+                    ReadPostItem.ReadPostItemImage readPostItemImage = new ReadPostItem.ReadPostItemImage(1,
+                            jsonObject.getString(key));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        setupList();
+    }
+
+    @Override
+    public void onRequestError(Response response) {
+
+    }
+
+    @Override
+    public void onRequestSendFailure(Throwable t) {
+        t.printStackTrace();
+    }
+
+    @Override
+    public void onRefreshTokenExpired(Response response) {
+        Toast.makeText(getContext(), "refresh token failure", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onObtainAccessTokenError(Response response) {
+        Toast.makeText(getContext(), "obtain access token error", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onObtainAccessTokenFailure(Throwable t) {
+        Toast.makeText(getContext(), "access token failure", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onInternalErrorFailure() {
+        Toast.makeText(getContext(), "Internal Error", Toast.LENGTH_SHORT).show();
+    }
+
     private void initialize(View v) {
         recyclerPost = v.findViewById(R.id.recycler_read_post_recycler);
+        txtAuthor = v.findViewById(R.id.txt_read_post_author_name);
+        txtDate = v.findViewById(R.id.txt_read_post_date);
+        txtTitle = v.findViewById(R.id.txt_read_post_title);
+        imgAuthorPhoto = v.findViewById(R.id.img_read_post_author_image);
+        imgCoverImage = v.findViewById(R.id.img_read_post_cover_image);
+    }
+
+    public PostsListItem getParamPostItem() {
+        return paramPostItem;
+    }
+
+    public void setParamPostItem(PostsListItem paramPostItem) {
+        this.paramPostItem = paramPostItem;
     }
 }
