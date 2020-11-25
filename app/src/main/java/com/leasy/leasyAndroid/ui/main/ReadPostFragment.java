@@ -1,10 +1,6 @@
 package com.leasy.leasyAndroid.ui.main;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
 import com.leasy.leasyAndroid.R;
 import com.leasy.leasyAndroid.RecyclerAdapterReadPost;
 import com.leasy.leasyAndroid.api.ApiUtils;
@@ -25,6 +23,7 @@ import com.leasy.leasyAndroid.model.ReadPostItem;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -84,7 +83,6 @@ public class ReadPostFragment extends Fragment implements UiCallBack {
         ApiUtils.requestGetPostContent(this, paramPostItem.getPostItem().getId());
 
 
-
         return v;
     }
 
@@ -96,37 +94,44 @@ public class ReadPostFragment extends Fragment implements UiCallBack {
 
     @Override
     public void onRequestSuccessful(Response response) {
-        ReadPostItem readPostItem = ((List<ReadPostItem>) response.body()).get(0);
+        ReadPostItem readPostItem = ((List<List<ReadPostItem>>) response.body()).get(0).get(0);
         String content = readPostItem.getMainContent();
+        System.out.println(content);
         readPostItemList = new LinkedList<>();
         readPostItemList.add(new ReadPostItem.ReadPostItemText(0, paramPostItem.getPostItem().getSummary()));
         JSONObject jsonObject;
         try {
-             jsonObject = new JSONObject(content);
-        } catch (Exception e){
+            jsonObject = new JSONObject(content);
+            Iterator<String> iter = jsonObject.keys();
+            int i = 1;
+            while (iter.hasNext()) {
+                String key = iter.next();
+                if (key.startsWith("TEXT")) {
+                    try {
+                        ReadPostItem.ReadPostItemText itemText = new ReadPostItem.ReadPostItemText(i,
+                                jsonObject.getString(key));
+                        readPostItemList.add(itemText);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else if (key.startsWith("IMAGE")) {
+                    try {
+                        ReadPostItem.ReadPostItemImage readPostItemImage = new ReadPostItem.ReadPostItemImage(i,
+                                jsonObject.getString(key));
+                        readPostItemList.add(readPostItemImage);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                i++;
+            }
+            setupList();
+        } catch (Exception e) {
             readPostItemList.add(new ReadPostItem.ReadPostItemText(1, content));
+            System.out.println("shit");
             setupList();
             return;
         }
-        while(jsonObject.keys().hasNext()) {
-            String key = jsonObject.keys().next();
-            if (key.startsWith("TEXT")) {
-                try {
-                    ReadPostItem.ReadPostItemText itemText = new ReadPostItem.ReadPostItemText(1,
-                            jsonObject.getString(key));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } else if (key.startsWith("IMAGE")) {
-                try {
-                    ReadPostItem.ReadPostItemImage readPostItemImage = new ReadPostItem.ReadPostItemImage(1,
-                            jsonObject.getString(key));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        setupList();
     }
 
     @Override
