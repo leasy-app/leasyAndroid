@@ -41,6 +41,12 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
         return v;
     }
 
+    public void returnToHomeFromWrite() {
+        loadHomePage(true);
+        bottomNav.setSelectedItemId(R.id.home_bottom_nav_main);
+        writePostFragment = null;
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == bottomNav.getSelectedItemId()) {

@@ -123,7 +123,8 @@ public class WritePostFragment extends Fragment implements UiCallBack {
 
     @Override
     public void onRequestSuccessful(Response response) {
-        // TODO: 11/20/20 go to home page
+        Toast.makeText(getContext(), "published.", Toast.LENGTH_SHORT).show();
+        ((MainFragment) getParentFragment()).returnToHomeFromWrite();
     }
 
     @Override
