@@ -44,7 +44,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, UiCa
         initialize(v);
         refreshLayout.setRefreshing(true);
 
-        Glide.with(this).load(R.drawable.profile).centerInside().into(imgUser);
 
         if (postsListItemList == null) {
             ApiUtils.requestGetAllPosts(this, null);
