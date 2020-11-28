@@ -59,11 +59,11 @@ public class ApiUtils {
     }
 
     public static void requestGetPostContent(UiCallBack uiCallBack, String id) {
-        Call<List<ReadPostItem>> call = RetrofitClientInstance.getRetrofitInstance()
+        Call<List<List<ReadPostItem>>> call = RetrofitClientInstance.getRetrofitInstance()
                 .create(Api.class).getPostContent(id);
-        call.enqueue(new Callback<List<ReadPostItem>>() {
+        call.enqueue(new Callback<List<List<ReadPostItem>>>() {
             @Override
-            public void onResponse(Call<List<ReadPostItem>> call, Response<List<ReadPostItem>> response) {
+            public void onResponse(Call<List<List<ReadPostItem>>> call, Response<List<List<ReadPostItem>>> response) {
                 if (response.isSuccessful()) {
                     uiCallBack.onRequestSuccessful(response);
                 } else if (500 <= response.code() && response.code() <= 599) {
@@ -74,7 +74,7 @@ public class ApiUtils {
             }
 
             @Override
-            public void onFailure(Call<List<ReadPostItem>> call, Throwable t) {
+            public void onFailure(Call<List<List<ReadPostItem>>> call, Throwable t) {
                 uiCallBack.onRequestSendFailure(t);
             }
         });

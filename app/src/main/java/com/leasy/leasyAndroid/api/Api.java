@@ -20,7 +20,7 @@ public interface Api {
     Call<List<PostsListItem.PostItem>> getAllPosts(@Query("categorie") String category);
 
     @GET("polls/Content/")
-    Call<List<ReadPostItem>> getPostContent(@Query("post") String id);
+    Call<List<List<ReadPostItem>>> getPostContent(@Query("id") String id);
 
     @GET("polls/AddFullPost")
     Call<Object> addFullPost(
