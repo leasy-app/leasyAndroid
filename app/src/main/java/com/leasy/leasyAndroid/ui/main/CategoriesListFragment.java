@@ -2,6 +2,7 @@ package com.leasy.leasyAndroid.ui.main;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.leasy.leasyAndroid.CategoriesListRecyclerAdapter;
+import com.leasy.leasyAndroid.MainActivity;
 import com.leasy.leasyAndroid.R;
 import com.leasy.leasyAndroid.api.ApiUtils;
 import com.leasy.leasyAndroid.api.UiCallBack;
@@ -50,7 +52,9 @@ public class CategoriesListFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        // TODO: 11/2/20
+        int i = ((RecyclerView.ViewHolder) v.getTag()).getAdapterPosition();
+        String category = categoryList.get(i).getCategoryName();
+        ((MainActivity) getActivity()).showCategoryPosts(category);
     }
 
     private void initialize(View v) {

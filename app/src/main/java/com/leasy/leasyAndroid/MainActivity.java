@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.leasy.leasyAndroid.model.PostsListItem;
 import com.leasy.leasyAndroid.ui.main.MainFragment;
+import com.leasy.leasyAndroid.ui.main.PostsListFragment;
 import com.leasy.leasyAndroid.ui.main.ReadPostFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,9 +35,22 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
+    public void showCategoryPosts(String category) {
+        PostsListFragment postsListFragment = PostsListFragment.newInstance(category);
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.fragment_open_enter, R.anim.fragment_open_exit,
+                        R.anim.fragment_close_enter, R.anim.fragment_close_exit)
+                .replace(R.id.container_main_activity, postsListFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
     @Override
     public void onBackPressed() {
-        if (mainFragment.getChildFragmentManager().getBackStackEntryCount() >= 1) {
+        if (getSupportFragmentManager().getBackStackEntryCount() >= 1){
+            getSupportFragmentManager().popBackStack();
+        }
+        else if (mainFragment.getChildFragmentManager().getBackStackEntryCount() >= 1) {
             mainFragment.getChildFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
