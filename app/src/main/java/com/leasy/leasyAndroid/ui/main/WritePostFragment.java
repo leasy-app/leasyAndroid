@@ -4,12 +4,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,12 +22,14 @@ import com.leasy.leasyAndroid.R;
 import com.leasy.leasyAndroid.WritePostRecyclerAdapter;
 import com.leasy.leasyAndroid.api.ApiUtils;
 import com.leasy.leasyAndroid.api.UiCallBack;
+import com.leasy.leasyAndroid.model.Category;
 import com.leasy.leasyAndroid.model.WritePostItem;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import retrofit2.Response;
 
@@ -34,10 +40,14 @@ public class WritePostFragment extends Fragment implements UiCallBack {
     private ImageView imgCover;
     private TextInputEditText edtTitle, edtDescription;
     private ImageButton btnAddText, btnAddHeading, btnAddImage, btnAddCode;
+    private AppCompatSpinner spinnerCategories;
+    private int categoryIndex = 0;
 
     private WritePostRecyclerAdapter writePostRecyclerAdapter;
-
+    private ArrayAdapter<String> categoriesAdapter;
     private LinkedList<WritePostItem> writePostItemLinkedList;
+
+    private final String FETCHING_CATEGORIES = "Fetching Categories...";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +63,23 @@ public class WritePostFragment extends Fragment implements UiCallBack {
         View v = inflater.inflate(R.layout.fragment_write_post, container, false);
         initialize(v);
 
+        categoriesAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item);
+        categoriesAdapter.add(FETCHING_CATEGORIES);
+        categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategories.setAdapter(categoriesAdapter);
+        spinnerCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                categoryIndex = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        ApiUtils.requestGetAllCategories(this);
 
         recyclerWrite.setHasFixedSize(false);
         recyclerWrite.setAdapter(writePostRecyclerAdapter);
@@ -65,9 +92,13 @@ public class WritePostFragment extends Fragment implements UiCallBack {
         btnPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (categoryIndex == 0) {
+                    Toast.makeText(getContext(), "Select a category.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String title = edtTitle.getText().toString();
                 String photo = "NULL"; // FIXME: 11/20/20
-                String category = "api"; // FIXME: 11/20/20
+                String category = categoriesAdapter.getItem(categoryIndex);
                 String writer = "windows"; // FIXME: 11/20/20
                 String summary = edtDescription.getText().toString();
 
@@ -119,12 +150,25 @@ public class WritePostFragment extends Fragment implements UiCallBack {
         btnAddHeading = v.findViewById(R.id.btn_write_post_add_heading);
         btnAddImage = v.findViewById(R.id.btn_write_post_add_image);
         btnAddCode = v.findViewById(R.id.btn_write_post_add_code);
+        spinnerCategories = v.findViewById(R.id.spinner_categories);
     }
 
     @Override
     public void onRequestSuccessful(Response response) {
-        Toast.makeText(getContext(), "published.", Toast.LENGTH_SHORT).show();
-        ((MainFragment) getParentFragment()).returnToHomeFromWrite();
+        if (response.body() instanceof List) {
+            List<Category> categories = ((List<Category>) response.body());
+            categoriesAdapter.clear();
+            categoriesAdapter.add("Select a category");
+            for (Category c :
+                    categories) {
+                categoriesAdapter.add(c.getCategoryName());
+            }
+            categoriesAdapter.notifyDataSetChanged();
+        }
+        else {
+            Toast.makeText(getContext(), "published.", Toast.LENGTH_SHORT).show();
+            ((MainFragment) getParentFragment()).returnToHomeFromWrite();
+        }
     }
 
     @Override
