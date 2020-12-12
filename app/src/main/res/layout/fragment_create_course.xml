@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.main.WritePostFragment">
+
+    <Button
+        android:id="@+id/btn_create_course_publish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        android:text="Publish"
+        android:textAppearance="@style/AppTextAppearance.Heading3"
+        android:textColor="@color/text_color_white" />
+
+    <androidx.core.widget.NestedScrollView
+        android:paddingBottom="30dp"
+        android:clipToPadding="false"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:clipToPadding="false"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="10dp"
+                android:layout_height="wrap_content">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    app:cardCornerRadius="15dp">
+                    <ImageView
+                        android:id="@+id/img_create_course_add_cover_image"
+                        android:layout_width="match_parent"
+                        android:foreground="?selectableItemBackgroundBorderless"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_add_image"
+                        android:scaleY="2"
+                        android:scaleX="2"
+                        android:tint="@color/text_color_grey"/>
+                </androidx.cardview.widget.CardView>
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="15dp"-->
+<!--                    android:orientation="vertical">-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:textAppearance="@style/AppTextAppearance"-->
+<!--                        android:textColor="@color/text_color_grey"-->
+<!--                        android:text="Category:"/>-->
+
+<!--                    <androidx.appcompat.widget.AppCompatSpinner-->
+<!--                        style="@style/AppTextAppearance.Heading3"-->
+<!--                        android:id="@+id/spinner_categories"-->
+<!--                        android:layout_margin="5dp"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:spinnerMode="dropdown"/>-->
+<!--                </LinearLayout>-->
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    app:hintTextAppearance="@style/AppTextAppearance.subtitle2.Large"
+                    android:maxLines="2"
+                    android:hint="Course Title">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_create_course_title_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@android:color/transparent"
+                        android:textAppearance="@style/AppTextAppearance.Heading3"
+                        android:maxLines="2"
+                        android:minLines="1"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:hintTextAppearance="@style/AppTextAppearance.subtitle2.Large"
+                    android:hint="Course Description">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:textAppearance="@style/AppTextAppearance"
+                        android:id="@+id/edt_create_course_description"
+                        android:layout_width="match_parent"
+                        android:minLines="1"
+                        android:maxLines="3"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@android:color/transparent"/>
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="15dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:textAppearance="@style/AppTextAppearance.Heading3"
+                    android:textColor="@color/text_color_grey"
+                    android:text="Course Posts:"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_create_course_add_post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add Post"
+                    android:backgroundTint="@color/black_palette"
+                    android:textAppearance="@style/AppTextAppearance.subtitle2"
+                    android:layout_gravity="center_vertical|end"
+                    android:textColor="@color/text_color_white" />
+
+            </FrameLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:nestedScrollingEnabled="true"
+                android:id="@+id/recycler_create_course"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                tools:listitem="@layout/posts_list_item_vertical"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        </LinearLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>
