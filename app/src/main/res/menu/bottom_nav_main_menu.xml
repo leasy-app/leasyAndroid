@@ -13,6 +13,12 @@
         android:iconTint="?attr/colorOnSecondary"
         android:title="@string/write" />
     <item
+        android:id="@+id/create_course_bottom_nav_main"
+        android:enabled="true"
+        android:icon="@drawable/ic_outline_library_books_24"
+        android:iconTint="?attr/colorOnSecondary"
+        android:title="Course"/>
+    <item
         android:id="@+id/categories_bottom_nav_main"
         android:enabled="true"
         android:iconTint="?attr/colorOnSecondary"

@@ -20,6 +20,7 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
     private MainViewModel mainViewModel;
     private BottomNavigationView bottomNav;
     private WritePostFragment writePostFragment;
+    private CreateCourseFragment createCourseFragment;
 
 
     public static MainFragment newInstance() {
@@ -28,7 +29,7 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
 
     enum EnumDir {rightToLeft, leftToRight}
 
-    enum EnumPages {home, write, categories, profile}
+    enum EnumPages {home, write, course, categories, profile}
 
     EnumPages activePage = EnumPages.home;
 
@@ -44,6 +45,9 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
             case write:
                 loadWritePage();
                 break;
+            case course:
+                loadCoursePage(false);
+                break;
             case categories:
                 loadCategoriesPage();
                 break;
@@ -53,6 +57,13 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
         }
         bottomNav.setOnNavigationItemSelectedListener(this);
         return v;
+    }
+
+    private void loadCoursePage(boolean addToBackStack) {
+        if (createCourseFragment == null)
+            createCourseFragment = new CreateCourseFragment();
+        changeMainFragment(createCourseFragment, null, addToBackStack);
+        activePage = EnumPages.course;
     }
 
     public void returnToHomeFromWrite() {
@@ -69,6 +80,8 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
             loadHomePage(false);
         } else if (item.getItemId() == R.id.write_bottom_nav_main) {
             loadWritePage();
+        } else if (item.getItemId() == R.id.create_course_bottom_nav_main) {
+            loadCoursePage(true);
         } else if (item.getItemId() == R.id.categories_bottom_nav_main) {
             loadCategoriesPage();
         } else if (item.getItemId() == R.id.profile_bottom_nav_main) {
