@@ -2,6 +2,7 @@ package com.leasy.leasyAndroid.api;
 
 import com.google.gson.JsonObject;
 import com.leasy.leasyAndroid.model.Category;
+import com.leasy.leasyAndroid.model.CourseModel;
 import com.leasy.leasyAndroid.model.PostsListItem;
 import com.leasy.leasyAndroid.model.ReadPostItem;
 
@@ -108,6 +109,78 @@ public class ApiUtils {
 
             @Override
             public void onFailure(Call<Object> call, Throwable t) {
+                uiCallBack.onRequestSendFailure(t);
+            }
+        });
+    }
+
+    public static void requestGetCourse(String courseId, UiCallBack uiCallBack) {
+        Call<List<CourseModel>> call = RetrofitClientInstance.getRetrofitInstance()
+                .create(Api.class).getCourse(courseId);
+        call.enqueue(new Callback<List<CourseModel>>() {
+            @Override
+            public void onResponse(Call<List<CourseModel>> call, Response<List<CourseModel>> response) {
+                if (response.isSuccessful()) {
+                    uiCallBack.onRequestSuccessful(response);
+                } else if (500 <= response.code() && response.code() <= 599) {
+                    uiCallBack.onInternalErrorFailure();
+                } else if (response.code() != 401) {
+                    uiCallBack.onRequestError(response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CourseModel>> call, Throwable t) {
+                uiCallBack.onRequestSendFailure(t);
+            }
+        });
+    }
+
+    public static void requestAddCourse(
+            String title,
+            String picture,
+            String description,
+            String posts,
+            UiCallBack uiCallBack
+    ) {
+        Call<Object> call = RetrofitClientInstance.getRetrofitInstance()
+                .create(Api.class).addCourse(title, picture, description, posts);
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if (response.isSuccessful()) {
+                    uiCallBack.onRequestSuccessful(response);
+                } else if (500 <= response.code() && response.code() <= 599) {
+                    uiCallBack.onInternalErrorFailure();
+                } else if (response.code() != 401) {
+                    uiCallBack.onRequestError(response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                uiCallBack.onRequestSendFailure(t);
+            }
+        });
+    }
+
+    public static void requestGetCoursePosts(String courseId, UiCallBack uiCallBack) {
+        Call<List<PostsListItem.PostItem>> call = RetrofitClientInstance.getRetrofitInstance()
+                .create(Api.class).getCoursePosts(courseId);
+        call.enqueue(new Callback<List<PostsListItem.PostItem>>() {
+            @Override
+            public void onResponse(Call<List<PostsListItem.PostItem>> call, Response<List<PostsListItem.PostItem>> response) {
+                if (response.isSuccessful()) {
+                    uiCallBack.onRequestSuccessful(response);
+                } else if (500 <= response.code() && response.code() <= 599) {
+                    uiCallBack.onInternalErrorFailure();
+                } else if (response.code() != 401) {
+                    uiCallBack.onRequestError(response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<PostsListItem.PostItem>> call, Throwable t) {
                 uiCallBack.onRequestSendFailure(t);
             }
         });
