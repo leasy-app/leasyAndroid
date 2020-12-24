@@ -136,4 +136,32 @@ public class ApiUtils {
         });
     }
 
+    public static void requestAddCourse(
+            String title,
+            String picture,
+            String description,
+            String posts,
+            UiCallBack uiCallBack
+    ) {
+        Call<Object> call = RetrofitClientInstance.getRetrofitInstance()
+                .create(Api.class).addCourse(title, picture, description, posts);
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if (response.isSuccessful()) {
+                    uiCallBack.onRequestSuccessful(response);
+                } else if (500 <= response.code() && response.code() <= 599) {
+                    uiCallBack.onInternalErrorFailure();
+                } else if (response.code() != 401) {
+                    uiCallBack.onRequestError(response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                uiCallBack.onRequestSendFailure(t);
+            }
+        });
+    }
+
 }

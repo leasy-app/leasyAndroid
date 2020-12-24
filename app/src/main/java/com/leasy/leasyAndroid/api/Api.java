@@ -37,4 +37,12 @@ public interface Api {
 
     @GET("polls/GetCourse")
     Call<List<CourseModel>> getCourse(@Query("course") String courseId);
+
+    @GET("polls/AddCourse")
+    Call<Object> addCourse(@Query("name") String title,
+                           @Query("picture") String picture,
+                           @Query("explanation") String description,
+                           @Query("posts") String posts);
+
+
 }
