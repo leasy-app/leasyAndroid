@@ -44,5 +44,6 @@ public interface Api {
                            @Query("explanation") String description,
                            @Query("posts") String posts);
 
-
+    @GET("polls/GetPostCourse")
+    Call<List<PostsListItem.PostItem>> getCoursePosts(@Query("course") String courseId);
 }
