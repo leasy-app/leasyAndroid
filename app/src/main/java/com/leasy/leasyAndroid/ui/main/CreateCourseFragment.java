@@ -10,17 +10,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.leasy.leasyAndroid.R;
+import com.leasy.leasyAndroid.RecyclerAdapterPostsVertical;
+import com.leasy.leasyAndroid.api.ApiUtils;
+import com.leasy.leasyAndroid.api.UiCallBack;
+import com.leasy.leasyAndroid.model.PostsListItem;
 
-public class CreateCourseFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Response;
+
+public class CreateCourseFragment extends Fragment implements UiCallBack {
 
     private RecyclerView recyclerPosts;
     private Button btnPublish, btnAddPosts;
     private TextInputEditText edtTitle, edtDescription;
     private ImageView imgCover;
 
+    private RecyclerAdapterPostsVertical recyclerAdapter;
+    private List<PostsListItem> selectedPostsList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,6 +45,53 @@ public class CreateCourseFragment extends Fragment {
         View v =  inflater.inflate(R.layout.fragment_create_course, container, false);
         initialize(v);
 
+        if (selectedPostsList == null)
+            selectedPostsList = new ArrayList<>();
+
+        recyclerAdapter = new RecyclerAdapterPostsVertical(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        return;
+                    }
+                },
+                selectedPostsList,
+                getContext()
+        );
+        recyclerPosts.setAdapter(recyclerAdapter);
+        recyclerPosts.setHasFixedSize(false);
+
+        btnPublish.setOnClickListener(v1 -> {
+            if (selectedPostsList.isEmpty()) {
+                Toast.makeText(getContext(), "add posts.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (edtTitle.getText().length() == 0 || edtDescription.getText().length() == 0)
+                return;
+            String title = edtTitle.getText().toString();
+            String descr = edtDescription.getText().toString();
+            StringBuilder posts = new StringBuilder();
+            for (int i = 0; i < selectedPostsList.size(); i++) {
+                posts.append(selectedPostsList.get(i).getPostItem().getId());
+                if (i == selectedPostsList.size()-1)
+                    posts.append('-');
+            }
+            ApiUtils.requestAddCourse(
+                    title,
+                    "none",
+                    descr,
+                    posts.toString(),
+                    CreateCourseFragment.this
+            );
+        });
+
+        btnAddPosts.setOnClickListener(v1 -> {
+            AddPostsToCourseFragment fragment = AddPostsToCourseFragment.newInstance("windows", this);
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.container_main_fragment, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
 
         return v;
     }
@@ -46,5 +105,47 @@ public class CreateCourseFragment extends Fragment {
         imgCover = v.findViewById(R.id.img_create_course_add_cover_image);
     }
 
+    void addPost(PostsListItem.PostItem postItem) {
+        for (PostsListItem item :
+             selectedPostsList) {
+            if (item.getPostItem().getId().equals(postItem.getId()))
+                return;
+        }
+        selectedPostsList.add(new PostsListItem(postItem));
+    }
 
+    @Override
+    public void onRequestSuccessful(Response response) {
+        getActivity().onBackPressed();
+    }
+
+    @Override
+    public void onRequestError(Response response) {
+
+    }
+
+    @Override
+    public void onRequestSendFailure(Throwable t) {
+
+    }
+
+    @Override
+    public void onRefreshTokenExpired(Response response) {
+
+    }
+
+    @Override
+    public void onObtainAccessTokenError(Response response) {
+
+    }
+
+    @Override
+    public void onObtainAccessTokenFailure(Throwable t) {
+
+    }
+
+    @Override
+    public void onInternalErrorFailure() {
+
+    }
 }

@@ -18,7 +18,7 @@ public interface Api {
     Call<List<Category>> getAllCategories();
 
     @GET("polls/Posts/")
-    Call<List<PostsListItem.PostItem>> getAllPosts(@Query("categorie") String category);
+    Call<List<PostsListItem.PostItem>> getAllPosts(@Query("categorie") String category, @Query("writer") String writer);
 
     @GET("polls/Content/")
     Call<List<List<ReadPostItem>>> getPostContent(@Query("id") String id);

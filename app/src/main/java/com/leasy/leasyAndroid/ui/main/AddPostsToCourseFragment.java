@@ -9,28 +9,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.leasy.leasyAndroid.R;
-import com.leasy.leasyAndroid.RecyclerAdapterPostsSelectable;
 import com.leasy.leasyAndroid.RecyclerAdapterPostsVertical;
+import com.leasy.leasyAndroid.api.ApiUtils;
+import com.leasy.leasyAndroid.api.UiCallBack;
 import com.leasy.leasyAndroid.model.PostsListItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Response;
 
-public class AddPostsToCourseFragment extends Fragment {
+
+public class AddPostsToCourseFragment extends Fragment implements UiCallBack {
     
-    private FloatingActionButton fabAdd;
     private RecyclerView recyclerPosts;
 
-    private RecyclerAdapterPostsSelectable recyclerAdapterPosts;
+    private RecyclerAdapterPostsVertical recyclerAdapterPosts;
     private String writer;
-    private List<PostsListItem> previouslyAddedPosts;
-    
-    public static AddPostsToCourseFragment newInstance(List<PostsListItem> previouslyAddedPosts, String writer) {
+    private List<PostsListItem> postsList;
+    private CreateCourseFragment createCourseFragment;
+
+    public static AddPostsToCourseFragment newInstance(String writer, CreateCourseFragment courseFragment) {
         AddPostsToCourseFragment fragment = new AddPostsToCourseFragment();
-        fragment.previouslyAddedPosts = previouslyAddedPosts;
         fragment.writer = writer;
+        fragment.createCourseFragment = courseFragment;
         return fragment;
     }
 
@@ -44,11 +47,9 @@ public class AddPostsToCourseFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_add_posts_to_course, container, false);
         initialize(v);
 
-        // TODO: 12/16/20 get posts from server
-
-        fabAdd.setOnClickListener(v1 -> {
-            // TODO: 12/16/20 add posts to course
-        });
+        if (postsList == null)
+            postsList = new ArrayList<>();
+        ApiUtils.requestGetAllPosts(this, null, writer);
         return v;
     }
 
@@ -58,6 +59,54 @@ public class AddPostsToCourseFragment extends Fragment {
 
     private void initialize(View v) {
         recyclerPosts = v.findViewById(R.id.recycler_add_posts_to_course);
-        fabAdd = v.findViewById(R.id.fab_add_posts_to_course);
+    }
+
+    @Override
+    public void onRequestSuccessful(Response response) {
+        List<PostsListItem.PostItem> postItems = ((List<PostsListItem.PostItem>) response.body());
+        for (PostsListItem.PostItem postItem : postItems) {
+            postsList.add(new PostsListItem(postItem));
+        }
+        recyclerAdapterPosts = new RecyclerAdapterPostsVertical(
+                v -> {
+                    int i = ((RecyclerView.ViewHolder) v.getTag()).getAdapterPosition();
+                    PostsListItem.PostItem postItem = postsList.get(i).getPostItem();
+                    createCourseFragment.addPost(postItem);
+                    getActivity().onBackPressed();
+                },
+                postsList,
+                getContext()
+        );
+        recyclerPosts.setAdapter(recyclerAdapterPosts);
+    }
+
+    @Override
+    public void onRequestError(Response response) {
+
+    }
+
+    @Override
+    public void onRequestSendFailure(Throwable t) {
+
+    }
+
+    @Override
+    public void onRefreshTokenExpired(Response response) {
+
+    }
+
+    @Override
+    public void onObtainAccessTokenError(Response response) {
+
+    }
+
+    @Override
+    public void onObtainAccessTokenFailure(Throwable t) {
+
+    }
+
+    @Override
+    public void onInternalErrorFailure() {
+
     }
 }

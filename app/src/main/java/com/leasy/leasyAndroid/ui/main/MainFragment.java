@@ -46,7 +46,7 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
                 loadWritePage();
                 break;
             case course:
-                loadCoursePage(false);
+                loadCoursePage(true);
                 break;
             case categories:
                 loadCategoriesPage();
@@ -67,7 +67,7 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
     }
 
     public void returnToHomeFromWrite() {
-        loadHomePage(true);
+        loadHomePage(false);
         writePostFragment = null;
     }
 
@@ -101,9 +101,9 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
                     android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         }
         fragmentTransaction = fragmentTransaction.replace(R.id.container_main_fragment, newFragment);
-//        if (addToBackStack) {
-//            fragmentTransaction = fragmentTransaction.addToBackStack(null);
-//        }
+        if (addToBackStack) {
+            fragmentTransaction = fragmentTransaction.addToBackStack(null);
+        }
         fragmentTransaction.commit();
     }
 

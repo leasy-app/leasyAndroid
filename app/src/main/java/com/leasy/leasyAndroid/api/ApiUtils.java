@@ -1,5 +1,7 @@
 package com.leasy.leasyAndroid.api;
 
+import androidx.annotation.Nullable;
+
 import com.google.gson.JsonObject;
 import com.leasy.leasyAndroid.model.Category;
 import com.leasy.leasyAndroid.model.CourseModel;
@@ -37,9 +39,9 @@ public class ApiUtils {
         });
     }
 
-    public static void requestGetAllPosts(UiCallBack uiCallBack, String category) {
+    public static void requestGetAllPosts(UiCallBack uiCallBack, @Nullable String category, @Nullable String writer) {
         Call<List<PostsListItem.PostItem>> call = RetrofitClientInstance.getRetrofitInstance()
-                .create(Api.class).getAllPosts(category);
+                .create(Api.class).getAllPosts(category, writer);
         call.enqueue(new Callback<List<PostsListItem.PostItem>>() {
             @Override
             public void onResponse(Call<List<PostsListItem.PostItem>> call, Response<List<PostsListItem.PostItem>> response) {

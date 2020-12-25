@@ -46,17 +46,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener, UiCa
 
 
         if (postsListItemList == null) {
-            ApiUtils.requestGetAllPosts(this, null);
+            ApiUtils.requestGetAllPosts(this, null, null);
         } else {
             recyclerAdapter = new RecyclerAdapterPostsVertical(this::onClick, postsListItemList, getContext());
             recyclerPosts.setHasFixedSize(true);
             recyclerPosts.setAdapter(recyclerAdapter);
+            refreshLayout.setRefreshing(false);
         }
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                ApiUtils.requestGetAllPosts(HomeFragment.this, null);
+                ApiUtils.requestGetAllPosts(HomeFragment.this, null, null);
             }
         });
 

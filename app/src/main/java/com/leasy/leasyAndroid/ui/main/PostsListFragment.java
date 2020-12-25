@@ -49,7 +49,7 @@ public class PostsListFragment extends Fragment implements UiCallBack, View.OnCl
         initialize(v);
         toolbar.setTitle(category);
         if (postsListItemList == null) {
-            ApiUtils.requestGetAllPosts(this, null);
+            ApiUtils.requestGetAllPosts(this, category, null);
         } else {
             recyclerAdapter = new RecyclerAdapterPostsVertical(this::onClick, postsListItemList, getContext());
             recyclerView.setHasFixedSize(true);
