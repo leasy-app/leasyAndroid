@@ -20,6 +20,7 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
     private MainViewModel mainViewModel;
     private BottomNavigationView bottomNav;
     private WritePostFragment writePostFragment;
+    private CreateCourseFragment createCourseFragment;
 
 
     public static MainFragment newInstance() {
@@ -28,7 +29,7 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
 
     enum EnumDir {rightToLeft, leftToRight}
 
-    enum EnumPages {home, write, categories, profile}
+    enum EnumPages {home, write, course, categories, profile}
 
     EnumPages activePage = EnumPages.home;
 
@@ -44,6 +45,9 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
             case write:
                 loadWritePage();
                 break;
+            case course:
+                loadCoursePage(true);
+                break;
             case categories:
                 loadCategoriesPage();
                 break;
@@ -55,8 +59,15 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
         return v;
     }
 
+    private void loadCoursePage(boolean addToBackStack) {
+        if (createCourseFragment == null)
+            createCourseFragment = new CreateCourseFragment();
+        changeMainFragment(createCourseFragment, null, addToBackStack);
+        activePage = EnumPages.course;
+    }
+
     public void returnToHomeFromWrite() {
-        loadHomePage(true);
+        loadHomePage(false);
         writePostFragment = null;
     }
 
@@ -69,6 +80,8 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
             loadHomePage(false);
         } else if (item.getItemId() == R.id.write_bottom_nav_main) {
             loadWritePage();
+        } else if (item.getItemId() == R.id.create_course_bottom_nav_main) {
+            loadCoursePage(true);
         } else if (item.getItemId() == R.id.categories_bottom_nav_main) {
             loadCategoriesPage();
         } else if (item.getItemId() == R.id.profile_bottom_nav_main) {
@@ -88,9 +101,9 @@ public class MainFragment extends Fragment implements BottomNavigationView.OnNav
                     android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         }
         fragmentTransaction = fragmentTransaction.replace(R.id.container_main_fragment, newFragment);
-//        if (addToBackStack) {
-//            fragmentTransaction = fragmentTransaction.addToBackStack(null);
-//        }
+        if (addToBackStack) {
+            fragmentTransaction = fragmentTransaction.addToBackStack(null);
+        }
         fragmentTransaction.commit();
     }
 

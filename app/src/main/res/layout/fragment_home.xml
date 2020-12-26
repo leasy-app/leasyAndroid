@@ -12,7 +12,7 @@
         android:id="@+id/app_bar_main"
         android:fitsSystemWindows="true"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:background="@android:color/transparent"
         android:elevation="0dp"
         app:elevation="0dp">
@@ -52,14 +52,56 @@
         android:id="@+id/swipe_refresh_home_posts"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_home_page"
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:nestedScrollingEnabled="true"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-            tools:itemCount="10"
-            tools:listitem="@layout/posts_list_item_vertical"/>
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Latest Courses"
+                    android:textAppearance="@style/AppTextAppearance.Heading2"
+                    android:paddingStart="20dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_courses_home"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:nestedScrollingEnabled="true"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:clipToPadding="false"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/course_list_layout"/>
+
+                <TextView
+                    android:layout_marginTop="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Latest Posts"
+                    android:textAppearance="@style/AppTextAppearance.Heading2"
+                    android:paddingStart="20dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_home_page"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:nestedScrollingEnabled="true"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                    tools:itemCount="10"
+                    tools:listitem="@layout/posts_list_item_vertical"/>
+
+            </LinearLayout>
+        </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

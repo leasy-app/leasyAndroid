@@ -80,7 +80,7 @@ public class ReadPostFragment extends Fragment implements UiCallBack {
             Glide.with(getContext()).load(coverUrl).into(imgCoverImage);
 
         // FIXME: 11/2/20 Show read content
-        ApiUtils.requestGetPostContent(this, paramPostItem.getPostItem().getId());
+        ApiUtils.requestGetPostContent(this, 0, paramPostItem.getPostItem().getId());
 
 
         return v;
@@ -93,7 +93,7 @@ public class ReadPostFragment extends Fragment implements UiCallBack {
     }
 
     @Override
-    public void onRequestSuccessful(Response response) {
+    public void onRequestSuccessful(Response response, int code) {
         ReadPostItem readPostItem = ((List<List<ReadPostItem>>) response.body()).get(0).get(0);
         String content = readPostItem.getMainContent();
         System.out.println(content);
@@ -135,32 +135,32 @@ public class ReadPostFragment extends Fragment implements UiCallBack {
     }
 
     @Override
-    public void onRequestError(Response response) {
+    public void onRequestError(Response response, int code) {
 
     }
 
     @Override
-    public void onRequestSendFailure(Throwable t) {
+    public void onRequestSendFailure(Throwable t, int code) {
         t.printStackTrace();
     }
 
     @Override
-    public void onRefreshTokenExpired(Response response) {
+    public void onRefreshTokenExpired(Response response, int code) {
         Toast.makeText(getContext(), "refresh token failure", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onObtainAccessTokenError(Response response) {
+    public void onObtainAccessTokenError(Response response, int code) {
         Toast.makeText(getContext(), "obtain access token error", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onObtainAccessTokenFailure(Throwable t) {
+    public void onObtainAccessTokenFailure(Throwable t, int code) {
         Toast.makeText(getContext(), "access token failure", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onInternalErrorFailure() {
+    public void onInternalErrorFailure(int code) {
         Toast.makeText(getContext(), "Internal Error", Toast.LENGTH_SHORT).show();
     }
 

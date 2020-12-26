@@ -38,13 +38,13 @@ public class CategoriesListFragment extends Fragment implements View.OnClickList
 
         if (categoryList == null) {
             swipeRefreshLayout.setRefreshing(true);
-            ApiUtils.requestGetAllCategories(this);
+            ApiUtils.requestGetAllCategories(this, 0);
         }
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             if (categoryList != null)
                 swipeRefreshLayout.setRefreshing(false);
-            ApiUtils.requestGetAllCategories(this);
+            ApiUtils.requestGetAllCategories(this, 0);
         });
 
         return v;
@@ -63,7 +63,7 @@ public class CategoriesListFragment extends Fragment implements View.OnClickList
     }
 
     @Override
-    public void onRequestSuccessful(Response response) {
+    public void onRequestSuccessful(Response response, int code) {
         categoryList = ((List<Category>) response.body());
         recyclerAdapter = new CategoriesListRecyclerAdapter(categoryList, this, getContext());
         recyclerCategories.setHasFixedSize(true);
@@ -72,34 +72,34 @@ public class CategoriesListFragment extends Fragment implements View.OnClickList
     }
 
     @Override
-    public void onRequestError(Response response) {
+    public void onRequestError(Response response, int code) {
         Toast.makeText(getContext(), "Error", Toast.LENGTH_LONG).show();
         swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
-    public void onRequestSendFailure(Throwable t) {
+    public void onRequestSendFailure(Throwable t, int code) {
         Toast.makeText(getContext(), "send failure", Toast.LENGTH_LONG).show();
         swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
-    public void onRefreshTokenExpired(Response response) {
+    public void onRefreshTokenExpired(Response response, int code) {
 
     }
 
     @Override
-    public void onObtainAccessTokenError(Response response) {
+    public void onObtainAccessTokenError(Response response, int code) {
 
     }
 
     @Override
-    public void onObtainAccessTokenFailure(Throwable t) {
+    public void onObtainAccessTokenFailure(Throwable t, int code) {
 
     }
 
     @Override
-    public void onInternalErrorFailure() {
+    public void onInternalErrorFailure(int code) {
         Toast.makeText(getContext(), "internal error", Toast.LENGTH_LONG).show();
         swipeRefreshLayout.setRefreshing(false);
     }

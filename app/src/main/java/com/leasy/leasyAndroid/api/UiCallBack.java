@@ -8,7 +8,7 @@ public interface UiCallBack {
      *
      * @param response server response
      */
-    void onRequestSuccessful(Response response);
+    void onRequestSuccessful(Response response, int code);
 
 
     /**
@@ -16,7 +16,7 @@ public interface UiCallBack {
      *
      * @param response server response
      */
-    void onRequestError(Response response);
+    void onRequestError(Response response, int code);
 
 
     /**
@@ -24,7 +24,7 @@ public interface UiCallBack {
      *
      * @param t failure exception throwable
      */
-    void onRequestSendFailure(Throwable t);
+    void onRequestSendFailure(Throwable t, int code);
 
 
     /**
@@ -32,14 +32,14 @@ public interface UiCallBack {
      *
      * @param response server response
      */
-    void onRefreshTokenExpired(Response response);
+    void onRefreshTokenExpired(Response response, int code);
 
     /**
      * Invoked when obtaining new access token with current refresh token has error
      *
      * @param response server response
      */
-    void onObtainAccessTokenError(Response response);
+    void onObtainAccessTokenError(Response response, int code);
 
 
     /**
@@ -47,11 +47,11 @@ public interface UiCallBack {
      *
      * @param t failure exception throwable
      */
-    void onObtainAccessTokenFailure(Throwable t);
+    void onObtainAccessTokenFailure(Throwable t, int code);
 
     /**
      * Invoked when a 500 internal error occurs
      */
-    void onInternalErrorFailure();
+    void onInternalErrorFailure(int code);
 }
 

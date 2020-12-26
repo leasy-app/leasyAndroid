@@ -2,6 +2,7 @@ package com.leasy.leasyAndroid.api;
 
 import com.google.gson.JsonObject;
 import com.leasy.leasyAndroid.model.Category;
+import com.leasy.leasyAndroid.model.CourseModel;
 import com.leasy.leasyAndroid.model.PostsListItem;
 import com.leasy.leasyAndroid.model.ReadPostItem;
 
@@ -17,7 +18,7 @@ public interface Api {
     Call<List<Category>> getAllCategories();
 
     @GET("polls/Posts/")
-    Call<List<PostsListItem.PostItem>> getAllPosts(@Query("categorie") String category);
+    Call<List<PostsListItem.PostItem>> getAllPosts(@Query("categorie") String category, @Query("writer") String writer);
 
     @GET("polls/Content/")
     Call<List<List<ReadPostItem>>> getPostContent(@Query("id") String id);
@@ -33,4 +34,16 @@ public interface Api {
             @Query("main_content") String mainContent,
             @Query("summary") String summary
     );
+
+    @GET("polls/GetCourse")
+    Call<List<CourseModel>> getCourse(@Query("course") String courseId);
+
+    @GET("polls/AddCourse")
+    Call<Object> addCourse(@Query("name") String title,
+                           @Query("picture") String picture,
+                           @Query("explanation") String description,
+                           @Query("posts") String posts);
+
+    @GET("polls/GetPostCourse")
+    Call<List<PostsListItem.PostItem>> getCoursePosts(@Query("course") String courseId);
 }

@@ -79,7 +79,7 @@ public class WritePostFragment extends Fragment implements UiCallBack {
             }
         });
 
-        ApiUtils.requestGetAllCategories(this);
+        ApiUtils.requestGetAllCategories(this, 0);
 
         recyclerWrite.setHasFixedSize(false);
         recyclerWrite.setAdapter(writePostRecyclerAdapter);
@@ -125,6 +125,7 @@ public class WritePostFragment extends Fragment implements UiCallBack {
 
                 ApiUtils.requestAddFullPost(
                         WritePostFragment.this,
+                        0,
                         title,
                         photo,
                         category,
@@ -154,7 +155,7 @@ public class WritePostFragment extends Fragment implements UiCallBack {
     }
 
     @Override
-    public void onRequestSuccessful(Response response) {
+    public void onRequestSuccessful(Response response, int code) {
         if (response.body() instanceof List) {
             List<Category> categories = ((List<Category>) response.body());
             categoriesAdapter.clear();
@@ -172,32 +173,32 @@ public class WritePostFragment extends Fragment implements UiCallBack {
     }
 
     @Override
-    public void onRequestError(Response response) {
+    public void onRequestError(Response response, int code) {
         Toast.makeText(getContext(), "on request error :/", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onRequestSendFailure(Throwable t) {
+    public void onRequestSendFailure(Throwable t, int code) {
         t.printStackTrace();
     }
 
     @Override
-    public void onRefreshTokenExpired(Response response) {
+    public void onRefreshTokenExpired(Response response, int code) {
         Toast.makeText(getContext(), "refresh token failure", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onObtainAccessTokenError(Response response) {
+    public void onObtainAccessTokenError(Response response, int code) {
         Toast.makeText(getContext(), "obtain access token error", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onObtainAccessTokenFailure(Throwable t) {
+    public void onObtainAccessTokenFailure(Throwable t, int code) {
         Toast.makeText(getContext(), "access token failure", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onInternalErrorFailure() {
+    public void onInternalErrorFailure(int code) {
         Toast.makeText(getContext(), "Internal Error", Toast.LENGTH_SHORT).show();
     }
 }
