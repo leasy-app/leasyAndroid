@@ -1,14 +1,20 @@
 package com.leasy.leasyAndroid.ui.main;
 
+import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,9 +46,16 @@ public class ReadPostFragment extends Fragment implements UiCallBack {
     private RecyclerAdapterReadPost adapterReadPost;
     private List<ReadPostItem> readPostItemList;
 
+    private ImageButton btnAddLike, btnAddBookmark;
+
     private static final String ARG_PARAM_POST_ITEM = "param1";
 
     private PostsListItem paramPostItem;
+
+    private static final int REQUEST_CODE_LOAD_CONTENT = 0;
+    private static final int REQUEST_CODE_ADD_READ = 1;
+    private static final int REQUEST_CODE_ADD_LIKE = 2;
+    private static final int REQUEST_CODE_ADD_BOOKMARK = 3;
 
     /**
      * Use this factory method to create a new instance of
@@ -82,6 +95,15 @@ public class ReadPostFragment extends Fragment implements UiCallBack {
         // FIXME: 11/2/20 Show read content
         ApiUtils.requestGetPostContent(this, 0, paramPostItem.getPostItem().getId());
 
+        btnAddLike.setOnClickListener(v1 -> {
+            String user = getActivity().getSharedPreferences("user_leasy", Context.MODE_PRIVATE).getString("username", "windows");
+            ApiUtils.requestAddLike(this, REQUEST_CODE_ADD_LIKE, user, paramPostItem.getPostItem().getId());
+        });
+        btnAddBookmark.setOnClickListener(v1 -> {
+            String user = getActivity().getSharedPreferences("user_leasy", Context.MODE_PRIVATE).getString("username", "windows");
+            ApiUtils.requestAddBookmark(this, REQUEST_CODE_ADD_BOOKMARK, user, paramPostItem.getPostItem().getId());
+        });
+
 
         return v;
     }
@@ -94,43 +116,62 @@ public class ReadPostFragment extends Fragment implements UiCallBack {
 
     @Override
     public void onRequestSuccessful(Response response, int code) {
-        ReadPostItem readPostItem = ((List<List<ReadPostItem>>) response.body()).get(0).get(0);
-        String content = readPostItem.getMainContent();
-        System.out.println(content);
-        readPostItemList = new LinkedList<>();
-        readPostItemList.add(new ReadPostItem.ReadPostItemText(0, paramPostItem.getPostItem().getSummary()));
-        JSONObject jsonObject;
-        try {
-            jsonObject = new JSONObject(content);
-            Iterator<String> iter = jsonObject.keys();
-            int i = 1;
-            while (iter.hasNext()) {
-                String key = iter.next();
-                if (key.startsWith("TEXT")) {
-                    try {
-                        ReadPostItem.ReadPostItemText itemText = new ReadPostItem.ReadPostItemText(i,
-                                jsonObject.getString(key));
-                        readPostItemList.add(itemText);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                } else if (key.startsWith("IMAGE")) {
-                    try {
-                        ReadPostItem.ReadPostItemImage readPostItemImage = new ReadPostItem.ReadPostItemImage(i,
-                                jsonObject.getString(key));
-                        readPostItemList.add(readPostItemImage);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                i++;
+        if (code == REQUEST_CODE_LOAD_CONTENT) {
+            ReadPostItem readPostItem;
+            try {
+                readPostItem = ((List<List<ReadPostItem>>) response.body()).get(0).get(0);
+            } catch (Exception e){
+                return;
             }
-            setupList();
-        } catch (Exception e) {
-            readPostItemList.add(new ReadPostItem.ReadPostItemText(1, content));
-            System.out.println("shit");
-            setupList();
-            return;
+            String content = readPostItem.getMainContent();
+            System.out.println(content);
+            readPostItemList = new LinkedList<>();
+            readPostItemList.add(new ReadPostItem.ReadPostItemText(0, paramPostItem.getPostItem().getSummary()));
+            JSONObject jsonObject;
+            try {
+                jsonObject = new JSONObject(content);
+                Iterator<String> iter = jsonObject.keys();
+                int i = 1;
+                while (iter.hasNext()) {
+                    String key = iter.next();
+                    if (key.startsWith("TEXT")) {
+                        try {
+                            ReadPostItem.ReadPostItemText itemText = new ReadPostItem.ReadPostItemText(i,
+                                    jsonObject.getString(key));
+                            readPostItemList.add(itemText);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (key.startsWith("IMAGE")) {
+                        try {
+                            ReadPostItem.ReadPostItemImage readPostItemImage = new ReadPostItem.ReadPostItemImage(i,
+                                    jsonObject.getString(key));
+                            readPostItemList.add(readPostItemImage);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    i++;
+                }
+                setupList();
+                String user = getActivity().getSharedPreferences("user_leasy", Context.MODE_PRIVATE).getString("username", "windows");
+                ApiUtils.requestAddRead(this, REQUEST_CODE_ADD_READ, user, paramPostItem.getPostItem().getId());
+            } catch (Exception e) {
+                readPostItemList.add(new ReadPostItem.ReadPostItemText(1, content));
+                System.out.println("shit");
+                setupList();
+                return;
+            }
+        } else if (code == REQUEST_CODE_ADD_READ) {
+            Log.i("read", "read_added");
+        } else if (code == REQUEST_CODE_ADD_LIKE){
+            btnAddLike.setImageResource(R.drawable.ic_icons8_love_filled);
+            btnAddLike.setColorFilter(ContextCompat.getColor(getContext(), R.color.pink_palette), PorterDuff.Mode.SRC_ATOP);
+            btnAddLike.setEnabled(false);
+        } else if (code == REQUEST_CODE_ADD_BOOKMARK) {
+            btnAddBookmark.setImageResource(R.drawable.ic_baseline_bookmark_24);
+            btnAddBookmark.setColorFilter(ContextCompat.getColor(getContext(), R.color.green_palette), PorterDuff.Mode.MULTIPLY);
+            btnAddBookmark.setEnabled(false);
         }
     }
 
@@ -171,6 +212,8 @@ public class ReadPostFragment extends Fragment implements UiCallBack {
         txtTitle = v.findViewById(R.id.txt_read_post_title);
         imgAuthorPhoto = v.findViewById(R.id.img_read_post_author_image);
         imgCoverImage = v.findViewById(R.id.img_read_post_cover_image);
+        btnAddBookmark = v.findViewById(R.id.btn_read_post_bookmark);
+        btnAddLike = v.findViewById(R.id.btn_read_post_like);
     }
 
     public PostsListItem getParamPostItem() {

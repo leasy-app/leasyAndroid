@@ -274,4 +274,69 @@ public class ApiUtils {
         });
     }
 
+    public static void requestAddLike(UiCallBack uiCallBack, int code, String user, String post) {
+        Call<Object> call = RetrofitClientInstance.getRetrofitInstance()
+                .create(Api.class).addLike(user, post);
+        call.enqueue((new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if (response.isSuccessful()) {
+                    uiCallBack.onRequestSuccessful(response, code);
+                } else if (500 <= response.code() && response.code() <= 599) {
+                    uiCallBack.onInternalErrorFailure(code);
+                } else if (response.code() != 401) {
+                    uiCallBack.onRequestError(response, code);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                uiCallBack.onRequestSendFailure(t, code);
+            }
+        }));
+    }
+
+    public static void requestAddRead(UiCallBack uiCallBack, int code, String user, String post) {
+        Call<Object> call = RetrofitClientInstance.getRetrofitInstance()
+                .create(Api.class).addRead(user, post);
+        call.enqueue((new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if (response.isSuccessful()) {
+                    uiCallBack.onRequestSuccessful(response, code);
+                } else if (500 <= response.code() && response.code() <= 599) {
+                    uiCallBack.onInternalErrorFailure(code);
+                } else if (response.code() != 401) {
+                    uiCallBack.onRequestError(response, code);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                uiCallBack.onRequestSendFailure(t, code);
+            }
+        }));
+    }
+
+    public static void requestAddBookmark(UiCallBack uiCallBack, int code, String user, String post) {
+        Call<Object> call = RetrofitClientInstance.getRetrofitInstance()
+                .create(Api.class).addBookmark(user, post);
+        call.enqueue((new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if (response.isSuccessful()) {
+                    uiCallBack.onRequestSuccessful(response, code);
+                } else if (500 <= response.code() && response.code() <= 599) {
+                    uiCallBack.onInternalErrorFailure(code);
+                } else if (response.code() != 401) {
+                    uiCallBack.onRequestError(response, code);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                uiCallBack.onRequestSendFailure(t, code);
+            }
+        }));
+    }
 }

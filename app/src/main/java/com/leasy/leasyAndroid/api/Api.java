@@ -57,4 +57,13 @@ public interface Api {
     @FormUrlEncoded
     @POST("polls/signin")
     Call<Object> postLogin(@FieldMap Map<String, String> map);
+
+    @GET("polls/AddRead")
+    Call<Object> addRead(@Query("user") String user, @Query("post") String post);
+
+    @GET("polls/AddLike")
+    Call<Object> addLike(@Query("user") String user, @Query("post") String post);
+
+    @GET("polls/AddMark")
+    Call<Object> addBookmark(@Query("user") String user, @Query("post") String post);
 }
