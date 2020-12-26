@@ -81,7 +81,8 @@ public class CreateCourseFragment extends Fragment implements UiCallBack {
                     "none",
                     descr,
                     posts.toString(),
-                    CreateCourseFragment.this
+                    CreateCourseFragment.this,
+                    0
             );
         });
 
@@ -115,37 +116,37 @@ public class CreateCourseFragment extends Fragment implements UiCallBack {
     }
 
     @Override
-    public void onRequestSuccessful(Response response) {
+    public void onRequestSuccessful(Response response, int code) {
         getActivity().onBackPressed();
     }
 
     @Override
-    public void onRequestError(Response response) {
+    public void onRequestError(Response response, int code) {
 
     }
 
     @Override
-    public void onRequestSendFailure(Throwable t) {
+    public void onRequestSendFailure(Throwable t, int code) {
 
     }
 
     @Override
-    public void onRefreshTokenExpired(Response response) {
+    public void onRefreshTokenExpired(Response response, int code) {
 
     }
 
     @Override
-    public void onObtainAccessTokenError(Response response) {
+    public void onObtainAccessTokenError(Response response, int code) {
 
     }
 
     @Override
-    public void onObtainAccessTokenFailure(Throwable t) {
+    public void onObtainAccessTokenFailure(Throwable t, int code) {
 
     }
 
     @Override
-    public void onInternalErrorFailure() {
+    public void onInternalErrorFailure(int code) {
 
     }
 }

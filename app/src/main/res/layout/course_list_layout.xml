@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="190dp"
+    android:layout_height="wrap_content"
+    android:foreground="?selectableItemBackgroundBorderless"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clipToPadding="false"
+    android:paddingStart="5dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:paddingEnd="5dp"
+    android:orientation="vertical">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        app:cardCornerRadius="15dp">
+        <ImageView
+            android:id="@+id/img_course_list_item_cover"
+            android:layout_width="180dp"
+            android:layout_height="120dp"
+            android:src="@drawable/test_2"
+            android:scaleType="centerCrop"/>
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/txt_course_list_title"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:textAppearance="@style/AppTextAppearance.Heading3"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:layout_marginTop="5dp"
+        android:text="Financial Machine Learning "/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_height="wrap_content">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_course_list_author_photo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@color/blue_palette"/>
+        <TextView
+            android:id="@+id/txt_course_list_author"
+            android:layout_width="wrap_content"
+            android:maxLines="1"
+            android:layout_height="30dp"
+            android:gravity="center_vertical|start"
+            android:layout_marginStart="5dp"
+            android:ellipsize="end"
+            android:textAppearance="@style/AppTextAppearance.subtitle2.Large"
+            android:text="Nima Hosseini"/>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

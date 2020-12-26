@@ -49,7 +49,7 @@ public class PostsListFragment extends Fragment implements UiCallBack, View.OnCl
         initialize(v);
         toolbar.setTitle(category);
         if (postsListItemList == null) {
-            ApiUtils.requestGetAllPosts(this, category, null);
+            ApiUtils.requestGetAllPosts(this, 0,category, null);
         } else {
             recyclerAdapter = new RecyclerAdapterPostsVertical(this::onClick, postsListItemList, getContext());
             recyclerView.setHasFixedSize(true);
@@ -71,7 +71,7 @@ public class PostsListFragment extends Fragment implements UiCallBack, View.OnCl
     }
 
     @Override
-    public void onRequestSuccessful(Response response) {
+    public void onRequestSuccessful(Response response, int code) {
         postsListItemList = new LinkedList<PostsListItem>();
         for (PostsListItem.PostItem post :((List<PostsListItem.PostItem>) response.body())){
             Log.i("logloglog", post.toString());
@@ -83,32 +83,32 @@ public class PostsListFragment extends Fragment implements UiCallBack, View.OnCl
     }
 
     @Override
-    public void onRequestError(Response response) {
+    public void onRequestError(Response response,int code) {
 
     }
 
     @Override
-    public void onRequestSendFailure(Throwable t) {
+    public void onRequestSendFailure(Throwable t, int code) {
 
     }
 
     @Override
-    public void onRefreshTokenExpired(Response response) {
+    public void onRefreshTokenExpired(Response response, int code) {
 
     }
 
     @Override
-    public void onObtainAccessTokenError(Response response) {
+    public void onObtainAccessTokenError(Response response, int code) {
 
     }
 
     @Override
-    public void onObtainAccessTokenFailure(Throwable t) {
+    public void onObtainAccessTokenFailure(Throwable t, int code) {
 
     }
 
     @Override
-    public void onInternalErrorFailure() {
+    public void onInternalErrorFailure(int code) {
 
     }
 }

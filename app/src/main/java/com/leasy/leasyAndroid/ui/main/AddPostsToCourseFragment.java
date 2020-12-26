@@ -49,7 +49,7 @@ public class AddPostsToCourseFragment extends Fragment implements UiCallBack {
 
         if (postsList == null)
             postsList = new ArrayList<>();
-        ApiUtils.requestGetAllPosts(this, null, writer);
+        ApiUtils.requestGetAllPosts(this, 0,null, writer);
         return v;
     }
 
@@ -62,7 +62,7 @@ public class AddPostsToCourseFragment extends Fragment implements UiCallBack {
     }
 
     @Override
-    public void onRequestSuccessful(Response response) {
+    public void onRequestSuccessful(Response response, int code) {
         List<PostsListItem.PostItem> postItems = ((List<PostsListItem.PostItem>) response.body());
         for (PostsListItem.PostItem postItem : postItems) {
             postsList.add(new PostsListItem(postItem));
@@ -81,32 +81,32 @@ public class AddPostsToCourseFragment extends Fragment implements UiCallBack {
     }
 
     @Override
-    public void onRequestError(Response response) {
+    public void onRequestError(Response response, int code) {
 
     }
 
     @Override
-    public void onRequestSendFailure(Throwable t) {
+    public void onRequestSendFailure(Throwable t, int code) {
 
     }
 
     @Override
-    public void onRefreshTokenExpired(Response response) {
+    public void onRefreshTokenExpired(Response response,int code) {
 
     }
 
     @Override
-    public void onObtainAccessTokenError(Response response) {
+    public void onObtainAccessTokenError(Response response,int code) {
 
     }
 
     @Override
-    public void onObtainAccessTokenFailure(Throwable t) {
+    public void onObtainAccessTokenFailure(Throwable t,int code) {
 
     }
 
     @Override
-    public void onInternalErrorFailure() {
+    public void onInternalErrorFailure(int code) {
 
     }
 }
