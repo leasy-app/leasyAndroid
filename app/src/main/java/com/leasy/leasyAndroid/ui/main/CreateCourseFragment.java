@@ -1,5 +1,6 @@
 package com.leasy.leasyAndroid.ui.main;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -87,7 +88,8 @@ public class CreateCourseFragment extends Fragment implements UiCallBack {
         });
 
         btnAddPosts.setOnClickListener(v1 -> {
-            AddPostsToCourseFragment fragment = AddPostsToCourseFragment.newInstance("windows", this);
+            String writer = getActivity().getSharedPreferences("user_leasy", Context.MODE_PRIVATE).getString("username", "windows");
+            AddPostsToCourseFragment fragment = AddPostsToCourseFragment.newInstance(writer, this);
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.container_main_fragment, fragment)
                     .addToBackStack(null)
