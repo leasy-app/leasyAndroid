@@ -1,5 +1,6 @@
 package com.leasy.leasyAndroid.ui.main;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,7 +100,7 @@ public class WritePostFragment extends Fragment implements UiCallBack {
                 String title = edtTitle.getText().toString();
                 String photo = "NULL"; // FIXME: 11/20/20
                 String category = categoriesAdapter.getItem(categoryIndex);
-                String writer = "windows"; // FIXME: 11/20/20
+                String writer = getActivity().getSharedPreferences("user_leasy", Context.MODE_PRIVATE).getString("username", "windows");
                 String summary = edtDescription.getText().toString();
 
                 JSONObject jsonObject = new JSONObject();
