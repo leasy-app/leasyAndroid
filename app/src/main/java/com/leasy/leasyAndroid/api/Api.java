@@ -1,15 +1,18 @@
 package com.leasy.leasyAndroid.api;
 
-import com.google.gson.JsonObject;
 import com.leasy.leasyAndroid.model.Category;
 import com.leasy.leasyAndroid.model.CourseModel;
 import com.leasy.leasyAndroid.model.PostsListItem;
 import com.leasy.leasyAndroid.model.ReadPostItem;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface Api {
@@ -46,4 +49,12 @@ public interface Api {
 
     @GET("polls/GetPostCourse")
     Call<List<PostsListItem.PostItem>> getCoursePosts(@Query("course") String courseId);
+
+    @FormUrlEncoded
+    @POST("polls/register")
+    Call<Object> postRegister(@FieldMap Map<String, String> map);
+
+    @FormUrlEncoded
+    @POST("polls/signin")
+    Call<Object> postLogin(@FieldMap Map<String, String> map);
 }
