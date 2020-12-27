@@ -4,6 +4,7 @@ import com.leasy.leasyAndroid.model.Category;
 import com.leasy.leasyAndroid.model.CourseModel;
 import com.leasy.leasyAndroid.model.PostsListItem;
 import com.leasy.leasyAndroid.model.ReadPostItem;
+import com.leasy.leasyAndroid.model.User;
 
 import java.util.List;
 import java.util.Map;
@@ -57,6 +58,9 @@ public interface Api {
     @FormUrlEncoded
     @POST("polls/signin")
     Call<Object> postLogin(@FieldMap Map<String, String> map);
+
+    @GET("polls/getUser")
+    Call<List<User>> getUser(@Query("username") String user);
 
     @GET("polls/AddRead")
     Call<Object> addRead(@Query("user") String user, @Query("post") String post);

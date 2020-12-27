@@ -3,6 +3,7 @@ package com.leasy.leasyAndroid.ui.main;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,9 @@ import com.leasy.leasyAndroid.api.ApiUtils;
 import com.leasy.leasyAndroid.api.UiCallBack;
 import com.leasy.leasyAndroid.model.PostsListItem;
 import com.leasy.leasyAndroid.model.ReadPostItem;
+import com.leasy.leasyAndroid.model.User;
+import com.leasy.leasyAndroid.util.Dates;
+import com.leasy.leasyAndroid.util.ImageLoader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,15 +87,49 @@ public class ReadPostFragment extends Fragment implements UiCallBack {
         initialize(v);
 
         txtTitle.setText(paramPostItem.getPostItem().getTitle());
-        txtDate.setText(paramPostItem.getPostItem().getDate());
+        txtDate.setText(Dates.fixDate(paramPostItem.getPostItem().getDate()));
         txtAuthor.setText(paramPostItem.getPostItem().getAuthor());
-        String authorUrl = paramPostItem.getPostItem().getAuthorImageURL();
-        if (URLUtil.isValidUrl(authorUrl))
-            Glide.with(getContext()).load(authorUrl).into(imgAuthorPhoto);
+        String authorId = paramPostItem.getPostItem().getAuthor();
         String coverUrl = paramPostItem.getPostItem().getPostImageURL();
-        if (URLUtil.isValidUrl(coverUrl))
-            Glide.with(getContext()).load(coverUrl).into(imgCoverImage);
+        ImageLoader.loadImage(coverUrl, imgCoverImage);
+        ApiUtils.getUser(new UiCallBack() {
+            @Override
+            public void onRequestSuccessful(Response response, int code) {
+                User u = ((List<User>)response.body()).get(0);
+                ImageLoader.loadImage(u.photo, imgAuthorPhoto);
+                txtAuthor.setText(u.name);
+            }
 
+            @Override
+            public void onRequestError(Response response, int code) {
+
+            }
+
+            @Override
+            public void onRequestSendFailure(Throwable t, int code) {
+
+            }
+
+            @Override
+            public void onRefreshTokenExpired(Response response, int code) {
+
+            }
+
+            @Override
+            public void onObtainAccessTokenError(Response response, int code) {
+
+            }
+
+            @Override
+            public void onObtainAccessTokenFailure(Throwable t, int code) {
+
+            }
+
+            @Override
+            public void onInternalErrorFailure(int code) {
+
+            }
+        }, 1, authorId);
         // FIXME: 11/2/20 Show read content
         ApiUtils.requestGetPostContent(this, 0, paramPostItem.getPostItem().getId());
 
@@ -202,7 +240,7 @@ public class ReadPostFragment extends Fragment implements UiCallBack {
 
     @Override
     public void onInternalErrorFailure(int code) {
-        Toast.makeText(getContext(), "Internal Error", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "Internal Error", Toast.LENGTH_SHORT).show();
     }
 
     private void initialize(View v) {

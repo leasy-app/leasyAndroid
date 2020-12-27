@@ -4,13 +4,16 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.leasy.leasyAndroid.model.CourseModel;
+import com.leasy.leasyAndroid.util.ImageLoader;
 
 import java.util.List;
 
@@ -40,6 +43,7 @@ public class CoursesListRecyclerAdapter extends RecyclerView.Adapter<CoursesList
     public void onBindViewHolder(@NonNull CoursesRecyclerViewHolder holder, int position) {
         CourseModel courseModel = coursesList.get(position);
         holder.txtTitle.setText(courseModel.getTitle());
+        ImageLoader.loadImage(courseModel.getCoverURL(), holder.imgCover);
 //        holder.txtAuthor.setText(courseModel.getAuthor());
         // TODO: 12/26/20 cover and author images
     }

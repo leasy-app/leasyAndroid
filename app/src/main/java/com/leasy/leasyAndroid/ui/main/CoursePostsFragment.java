@@ -52,7 +52,7 @@ public class CoursePostsFragment extends Fragment implements UiCallBack {
         View v = inflater.inflate(R.layout.fragment_course_posts, container, false);
         initialize(v);
 
-        if (postItems == null)
+//        if (postItems == null)
             ApiUtils.requestGetCoursePosts(courseID, this, 0);
 
         txtGoInfo.setOnClickListener(v1 -> {

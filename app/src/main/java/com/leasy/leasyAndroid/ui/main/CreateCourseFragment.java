@@ -74,7 +74,7 @@ public class CreateCourseFragment extends Fragment implements UiCallBack {
             StringBuilder posts = new StringBuilder();
             for (int i = 0; i < selectedPostsList.size(); i++) {
                 posts.append(selectedPostsList.get(i).getPostItem().getId());
-                if (i == selectedPostsList.size()-1)
+                if (i != selectedPostsList.size()-1)
                     posts.append('-');
             }
             ApiUtils.requestAddCourse(

@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.leasy.leasyAndroid.model.PostsListItem;
+import com.leasy.leasyAndroid.util.Dates;
+import com.leasy.leasyAndroid.util.ImageLoader;
 
 import java.util.List;
 
@@ -58,14 +60,11 @@ public class RecyclerAdapterPostsSelectable extends RecyclerView.Adapter<Recycle
         holder.txtCategory.setText(item.getCategory());
         holder.txtTitle.setText(item.getTitle());
         holder.txtSummary.setText(item.getSummary());
-        holder.txtDate.setText(item.getDate());
+        holder.txtDate.setText(Dates.fixDate(item.getDate()));
         holder.txtAuthor.setText(item.getAuthor());
-        if (item.getAuthorImageURL() != null)
-            if (URLUtil.isValidUrl(item.getAuthorImageURL()))
-                Glide.with(context).load(item.getAuthorImageURL()).into(holder.imgAuthor);
-        if (item.getPostImageURL() != null)
-            if (URLUtil.isValidUrl(item.getPostImageURL()))
-                Glide.with(context).load(item.getPostImageURL()).into(holder.imgPost);
+        holder.imgAuthor.setVisibility(View.GONE);
+        ImageLoader.loadImage(item.getAuthorImageURL(), holder.imgAuthor);
+        ImageLoader.loadImage(item.getPostImageURL(), holder.imgPost);
     }
 
     @Override

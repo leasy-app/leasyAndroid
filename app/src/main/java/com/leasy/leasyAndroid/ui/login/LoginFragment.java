@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.leasy.leasyAndroid.App;
 import com.leasy.leasyAndroid.LoginActivity;
 import com.leasy.leasyAndroid.R;
 import com.leasy.leasyAndroid.api.ApiUtils;
@@ -37,6 +38,9 @@ public class LoginFragment extends Fragment implements UiCallBack {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_login, container, false);
         initialize(v);
+        if(!App.username().equals("")){
+            ((LoginActivity) getActivity()).authSucceeded(App.username(), "");
+        }
         txtRegister.setOnClickListener(v1 -> {
             ((LoginActivity) getActivity()).showRegister();
         });

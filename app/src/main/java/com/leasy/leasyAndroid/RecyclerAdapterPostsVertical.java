@@ -13,11 +13,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.leasy.leasyAndroid.api.ApiUtils;
+import com.leasy.leasyAndroid.api.UiCallBack;
 import com.leasy.leasyAndroid.model.PostsListItem;
+import com.leasy.leasyAndroid.model.User;
+import com.leasy.leasyAndroid.util.Dates;
+import com.leasy.leasyAndroid.util.ImageLoader;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Response;
 
 public class RecyclerAdapterPostsVertical extends RecyclerView.Adapter<RecyclerAdapterPostsVertical.PostsVerticalRecyclerViewHolder> {
 
@@ -58,14 +64,48 @@ public class RecyclerAdapterPostsVertical extends RecyclerView.Adapter<RecyclerA
             holder.txtCategory.setText(item.getCategory());
             holder.txtTitle.setText(item.getTitle());
             holder.txtSummary.setText(item.getSummary());
-            holder.txtDate.setText(item.getDate());
+            holder.txtDate.setText(Dates.fixDate(item.getDate()));
             holder.txtAuthor.setText(item.getAuthor());
-            if (item.getAuthorImageURL() != null)
-                if (URLUtil.isValidUrl(item.getAuthorImageURL()))
-                    Glide.with(context).load(item.getAuthorImageURL()).into(holder.imgAuthor);
-            if (item.getPostImageURL() != null)
-                if (URLUtil.isValidUrl(item.getPostImageURL()))
-                    Glide.with(context).load(item.getPostImageURL()).into(holder.imgPost);
+            ApiUtils.getUser(new UiCallBack() {
+                @Override
+                public void onRequestSuccessful(Response response, int code) {
+                    User u = ((List<User>)response.body()).get(0);
+                    ImageLoader.loadImage(u.photo, holder.imgAuthor);
+                    holder.txtAuthor.setText(u.name);
+                }
+
+                @Override
+                public void onRequestError(Response response, int code) {
+
+                }
+
+                @Override
+                public void onRequestSendFailure(Throwable t, int code) {
+
+                }
+
+                @Override
+                public void onRefreshTokenExpired(Response response, int code) {
+
+                }
+
+                @Override
+                public void onObtainAccessTokenError(Response response, int code) {
+
+                }
+
+                @Override
+                public void onObtainAccessTokenFailure(Throwable t, int code) {
+
+                }
+
+                @Override
+                public void onInternalErrorFailure(int code) {
+
+                }
+            }, 1, item.getAuthor());
+//            ImageLoader.loadImage(item.getAuthorImageURL(), holder.imgAuthor);
+            ImageLoader.loadImage(item.getPostImageURL(), holder.imgPost);
         }
     }
 

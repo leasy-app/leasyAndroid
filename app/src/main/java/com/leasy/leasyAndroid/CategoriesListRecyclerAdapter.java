@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.leasy.leasyAndroid.model.Category;
+import com.leasy.leasyAndroid.util.ImageLoader;
 
 import java.util.List;
 
@@ -39,10 +40,7 @@ public class CategoriesListRecyclerAdapter extends RecyclerView.Adapter<Categori
     @Override
     public void onBindViewHolder(@NonNull CategoriesListViewHolder holder, int position) {
         Category category = categoryList.get(position);
-        if (category.getImageUrl() != null) {
-            if (URLUtil.isValidUrl(category.getImageUrl()))
-                Glide.with(context).load(category.getImageUrl()).into(holder.imgCover);
-        }
+        ImageLoader.loadImage(category.getImageUrl(), holder.imgCover);
         holder.txtName.setText(category.getCategoryName());
     }
 

@@ -14,6 +14,7 @@ import com.leasy.leasyAndroid.R;
 import com.leasy.leasyAndroid.api.ApiUtils;
 import com.leasy.leasyAndroid.api.UiCallBack;
 import com.leasy.leasyAndroid.model.CourseModel;
+import com.leasy.leasyAndroid.util.ImageLoader;
 
 import java.util.List;
 
@@ -59,6 +60,7 @@ public class CourseInfoFragment extends Fragment implements UiCallBack {
         CourseModel courseModel = ((List<CourseModel>) response.body()).get(0);
         txtTitle.setText(courseModel.getTitle());
         txtDescription.setText(courseModel.getDescription());
+        ImageLoader.loadImage(courseModel.getCoverURL(), imgCover);
         // TODO: 12/26/20 images
     }
 

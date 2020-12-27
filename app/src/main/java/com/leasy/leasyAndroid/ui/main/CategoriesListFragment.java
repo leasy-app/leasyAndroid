@@ -100,7 +100,7 @@ public class CategoriesListFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onInternalErrorFailure(int code) {
-        Toast.makeText(getContext(), "internal error", Toast.LENGTH_LONG).show();
+//        Toast.makeText(getContext(), "internal error", Toast.LENGTH_LONG).show();
         swipeRefreshLayout.setRefreshing(false);
     }
 }

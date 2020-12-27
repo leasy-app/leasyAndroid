@@ -9,10 +9,10 @@ public class CourseModel {
     @SerializedName("Name")
     private String title;
 
-    @SerializedName("Picture")
+    @SerializedName("Explanation")
     private String description;
 
-    @SerializedName("Explanation")
+    @SerializedName("Picture")
     private String coverURL;
 
     private String author;

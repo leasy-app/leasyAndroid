@@ -42,7 +42,7 @@
                 android:layout_marginEnd="10dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Nima Hosseini"
+                android:text="..."
                 style="@style/AppTextAppearance.Heading2"
                 app:layout_collapseMode="parallax" />
         </LinearLayout>

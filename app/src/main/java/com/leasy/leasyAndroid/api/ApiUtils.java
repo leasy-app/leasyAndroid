@@ -9,6 +9,7 @@ import com.leasy.leasyAndroid.model.Category;
 import com.leasy.leasyAndroid.model.CourseModel;
 import com.leasy.leasyAndroid.model.PostsListItem;
 import com.leasy.leasyAndroid.model.ReadPostItem;
+import com.leasy.leasyAndroid.model.User;
 
 import org.json.JSONObject;
 
@@ -63,6 +64,28 @@ public class ApiUtils {
 
             @Override
             public void onFailure(Call<List<PostsListItem.PostItem>> call, Throwable t) {
+                uiCallBack.onRequestSendFailure(t, code);
+            }
+        });
+    }
+
+    public static void getUser(UiCallBack uiCallBack, int code, String usern) {
+        Call<List<User>> call = RetrofitClientInstance.getRetrofitInstance()
+                .create(Api.class).getUser(usern);
+        call.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if (response.isSuccessful()) {
+                    uiCallBack.onRequestSuccessful(response, code);
+                } else if (500 <= response.code() && response.code() <= 599) {
+                    uiCallBack.onInternalErrorFailure(code);
+                } else if (response.code() != 401) {
+                    uiCallBack.onRequestError(response, code);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
                 uiCallBack.onRequestSendFailure(t, code);
             }
         });
